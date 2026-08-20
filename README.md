@@ -64,7 +64,8 @@ project/
 
 ### Step 1: Clone or Navigate to Project Directory
 ```bash
-cd technical-seminar
+git clone https://github.com/MegaMewtowXy/MultiAgentBench.git
+cd MultiAgentBench
 ```
 
 ### Step 2: Create & Activate Virtual Environment (Optional but Recommended)

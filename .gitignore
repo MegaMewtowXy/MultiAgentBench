@@ -18,6 +18,7 @@ env/
 # Data Outputs & Logs (preserve directory structure)
 data/results/*
 !data/results/.gitkeep
+docs/research_report_*.md
 
 # IDE, Agent & OS Files
 .vscode/
