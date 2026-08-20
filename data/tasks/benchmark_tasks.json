@@ -1,0 +1,282 @@
+[
+  {
+    "task_id": "TASK_PLAN_001",
+    "category": "Planning",
+    "prompt": "Design a migration strategy for moving a legacy monolithic e-commerce application to an event-driven microservices architecture on AWS. The system handles 50,000 transactions/minute during peak sales.",
+    "constraints": [
+      "Zero downtime during database migration",
+      "Staged deployment phase across 4 quarters",
+      "Event streaming using Apache Kafka or AWS Kinesis",
+      "Fallback roll-back plan for order processing service"
+    ],
+    "expected_properties": [
+      "event-driven",
+      "kafka",
+      "microservices",
+      "rollback",
+      "strangler fig"
+    ],
+    "reference_answer": "Use Strangler Fig pattern with Kafka event bus, dual-writes for database synchronization, canary deployments per quarter, and automated rollback scripts.",
+    "evaluation_type": "constraint_validation"
+  },
+  {
+    "task_id": "TASK_CONST_002",
+    "category": "Constraint Satisfaction",
+    "prompt": "Formulate an optimal server infrastructure layout for a real-time multiplayer gaming backend under strict hardware and budget constraints.",
+    "constraints": [
+      "Maximum monthly infrastructure budget of $5,000",
+      "Target sub-50ms round-trip latency for North American users",
+      "Minimum 99.99% availability guarantee",
+      "Auto-scaling from 10 to 500 node instances"
+    ],
+    "expected_properties": [
+      "budget",
+      "latency",
+      "availability",
+      "auto-scaling",
+      "edge"
+    ],
+    "reference_answer": "Deploy Kubernetes clusters on AWS EKS across 3 US regions with CloudFront edge acceleration and Spot instances to maintain budget under $5k/month.",
+    "evaluation_type": "constraint_validation"
+  },
+  {
+    "task_id": "TASK_SYNTH_003",
+    "category": "Information Synthesis",
+    "prompt": "Synthesize a research summary comparing Graph Neural Networks (GNNs) against Transformer-based architectures for dynamic knowledge graph completion.",
+    "constraints": [
+      "Compare expressive power (expressiveness vs complexity)",
+      "Analyze memory consumption scaling O(V+E) vs O(N^2)",
+      "Evaluate performance on sparse vs dense graphs",
+      "Provide concrete architecture recommendation"
+    ],
+    "expected_properties": [
+      "expressiveness",
+      "complexity",
+      "sparse",
+      "transformer",
+      "gnn"
+    ],
+    "reference_answer": "GNNs offer O(V+E) spatial efficiency for sparse topologies, while Relational Transformers excel in modeling long-range relational dependencies at O(N^2) memory cost.",
+    "evaluation_type": "hybrid"
+  },
+  {
+    "task_id": "TASK_REASON_004",
+    "category": "Multi-step Reasoning",
+    "prompt": "Perform root cause analysis on a distributed deadlock bug in a high-throughput financial clearing system where database locks freeze during concurrent batch processing.",
+    "constraints": [
+      "Identify resource lock ordering mismatch across transactions",
+      "Propose non-blocking lock escalation mechanism",
+      "Define deadlock detection timeout threshold",
+      "Provide unit test scenario reproducing lock contention"
+    ],
+    "expected_properties": [
+      "deadlock",
+      "lock order",
+      "isolation level",
+      "concurrency",
+      "timeout"
+    ],
+    "reference_answer": "Enforce strict alphabetical table locking order across threads, lower transaction isolation level to Read Committed with optimistic locking, and set 5-second deadlock detector.",
+    "evaluation_type": "hybrid"
+  },
+  {
+    "task_id": "TASK_DECISION_005",
+    "category": "Decision-making",
+    "prompt": "Select the database technology stack for a global health record system requiring strict HIPAA compliance, ACID guarantees, and full-text search across 500M patient records.",
+    "constraints": [
+      "HIPAA encryption at rest and in transit",
+      "ACID compliance for medical history modifications",
+      "Sub-second full-text search queries",
+      "Multi-region fault tolerance"
+    ],
+    "expected_properties": [
+      "postgresql",
+      "elasticsearch",
+      "hipaa",
+      "acid",
+      "encryption"
+    ],
+    "reference_answer": "Hybrid PostgreSQL (CockroachDB multi-region ACID) coupled with Elasticsearch cluster for HIPAA-compliant encrypted full-text medical search.",
+    "evaluation_type": "constraint_validation"
+  },
+  {
+    "task_id": "TASK_COLLAB_006",
+    "category": "Collaborative Problem Solving",
+    "prompt": "Design a disaster recovery protocol for an online healthcare system following a simulated ransomware attack that encrypted primary database storage.",
+    "constraints": [
+      "Isolate compromised network subnets within 15 minutes",
+      "Restore patient data from immutable air-gapped backups",
+      "Verify data integrity before bringing patient portal online",
+      "Maintain regulatory incident notification reporting timeline"
+    ],
+    "expected_properties": [
+      "isolation",
+      "air-gapped",
+      "integrity",
+      "incident report",
+      "restoration"
+    ],
+    "reference_answer": "Execute network kill-switch protocol, verify checksum of immutable S3 Object Lock backups, rebuild clean VPC environments, and dispatch regulatory breach notices.",
+    "evaluation_type": "hybrid"
+  },
+  {
+    "task_id": "TASK_CODE_007",
+    "category": "Coding/problem-solving",
+    "prompt": "Design an in-memory rate-limiter component implementing the Leaky Bucket algorithm with thread-safe sliding window tracking in Python.",
+    "constraints": [
+      "Thread-safe implementation supporting concurrent requests",
+      "Configurable leak rate (requests per second) and bucket capacity",
+      "O(1) time complexity per rate check call",
+      "Include error handling for invalid capacity parameters"
+    ],
+    "expected_properties": [
+      "leaky bucket",
+      "thread-safe",
+      "capacity",
+      "leak rate",
+      "time"
+    ],
+    "reference_answer": "Class LeakyBucket with threading.Lock, timestamp tracking, capacity limit check, and O(1) leak rate update logic.",
+    "evaluation_type": "deterministic"
+  },
+  {
+    "task_id": "TASK_PLAN_008",
+    "category": "Planning",
+    "prompt": "Design a zero-trust security transition plan for a multi-region financial platform migrating from on-premises hardware security modules (HSMs) to cloud KMS infrastructure handling 100,000 cryptographic requests/sec.",
+    "constraints": [
+      "Zero downtime for transaction cryptographic signing",
+      "Staged migration strategy across 3 geographic data centers",
+      "Dual-signing fallback protocol for backward key compatibility",
+      "Automated audit trail logging for compliance verification"
+    ],
+    "expected_properties": [
+      "zero-trust",
+      "kms",
+      "hsm",
+      "dual-signing",
+      "audit"
+    ],
+    "reference_answer": "Implement dual-key signing bridge, route traffic per region via DNS canary weights, store keys in AWS KMS with HSM backing, and enforce automated audit trails.",
+    "evaluation_type": "constraint_validation"
+  },
+  {
+    "task_id": "TASK_CONST_009",
+    "category": "Constraint Satisfaction",
+    "prompt": "Formulate a multi-region database replication and failover schedule for a global banking API under strict latency, cost, and compliance constraints.",
+    "constraints": [
+      "Maximum monthly infrastructure budget of $8,000",
+      "Target sub-100ms replication lag between US and EU regions",
+      "Minimum 99.999% availability SLA",
+      "Strict GDPR data sovereignty isolation for EU user payloads"
+    ],
+    "expected_properties": [
+      "sovereignty",
+      "gdpr",
+      "replication",
+      "budget",
+      "sla"
+    ],
+    "reference_answer": "Deploy multi-region CockroachDB with localized row-level data pinning for GDPR compliance, active-active failover, and Spot instance read-replicas under $8k/month.",
+    "evaluation_type": "constraint_validation"
+  },
+  {
+    "task_id": "TASK_SYNTH_010",
+    "category": "Information Synthesis",
+    "prompt": "Synthesize a technical evaluation comparing Vector Databases (HNSW-backed) against Graph Databases (Cypher/RDF) for retrieval-augmented generation (RAG) in enterprise AI systems.",
+    "constraints": [
+      "Compare query latency scaling (O(log N) vector search vs O(V+E) graph traversal)",
+      "Analyze memory footprint and index build time overhead",
+      "Evaluate retrieval precision on unstructured text vs structured relational metadata",
+      "Provide concrete hybrid architecture recommendation"
+    ],
+    "expected_properties": [
+      "hnsw",
+      "graph",
+      "vector",
+      "hybrid",
+      "latency"
+    ],
+    "reference_answer": "HNSW vector indexing provides O(log N) similarity search over unstructured embeddings, whereas Graph databases excel in multi-hop relational path filtering; a hybrid vector-graph architecture balances precision and latency.",
+    "evaluation_type": "hybrid"
+  },
+  {
+    "task_id": "TASK_REASON_011",
+    "category": "Multi-step Reasoning",
+    "prompt": "Perform root cause analysis and resolution planning for a cascading memory leak in a high-throughput event processing engine handling 1,000,000 messages/second.",
+    "constraints": [
+      "Identify uncollected garbage collection (GC) references in object pool",
+      "Propose non-blocking ring buffer memory recycling strategy",
+      "Define memory threshold alert and circuit breaker trigger",
+      "Provide diagnostic profiling steps to isolate leaking memory addresses"
+    ],
+    "expected_properties": [
+      "memory leak",
+      "garbage collection",
+      "ring buffer",
+      "circuit breaker",
+      "profiling"
+    ],
+    "reference_answer": "Identify unreferenced objects in worker thread-local storage, implement LMAX Disruptor ring buffer to reuse memory objects deterministically, and configure 85% heap circuit breaker.",
+    "evaluation_type": "hybrid"
+  },
+  {
+    "task_id": "TASK_DECISION_012",
+    "category": "Decision-making",
+    "prompt": "Select the messaging and event bus architecture for a real-time autonomous vehicle fleet tracking system handling 200,000 telemetry updates per second.",
+    "constraints": [
+      "Sub-10ms delivery latency for critical safety alerts",
+      "Ordering guarantees for vehicle telemetry state updates",
+      "Fault tolerance with zero data loss (at-least-once delivery)",
+      "Cost-effective scalability across 50,000 active vehicles"
+    ],
+    "expected_properties": [
+      "kafka",
+      "mqtt",
+      "ordering",
+      "latency",
+      "fault tolerance"
+    ],
+    "reference_answer": "Deploy MQTT brokers at edge gateways for low-latency vehicle ingest, bridged to Apache Kafka with partition keying by Vehicle ID for strict ordering and zero data loss.",
+    "evaluation_type": "constraint_validation"
+  },
+  {
+    "task_id": "TASK_COLLAB_013",
+    "category": "Collaborative Problem Solving",
+    "prompt": "Design a zero-day vulnerability mitigation and hotfix deployment protocol for a critical financial authentication gateway following an active zero-day exploit report.",
+    "constraints": [
+      "Isolate vulnerable API endpoints within 10 minutes",
+      "Deploy emergency hotfix patch without service disruption",
+      "Validate security regression tests and session integrity",
+      "Prepare regulatory breach and compliance disclosure report"
+    ],
+    "expected_properties": [
+      "hotfix",
+      "mitigation",
+      "zero-day",
+      "regression",
+      "disclosure"
+    ],
+    "reference_answer": "Route traffic through WAF rules to block exploit payloads, deploy hotfix container image using rolling blue-green deployment, verify session tokens, and file regulatory disclosure.",
+    "evaluation_type": "hybrid"
+  },
+  {
+    "task_id": "TASK_CODE_014",
+    "category": "Coding/problem-solving",
+    "prompt": "Design a thread-safe LRU (Least Recently Used) cache data structure in Python supporting O(1) time complexity for get, put, and eviction operations.",
+    "constraints": [
+      "Thread-safe implementation supporting concurrent access",
+      "O(1) time complexity for get() and put() operations",
+      "Configurable max capacity parameter with automated eviction",
+      "Include error handling for invalid capacity parameters"
+    ],
+    "expected_properties": [
+      "lru",
+      "thread-safe",
+      "capacity",
+      "doubly linked",
+      "dictionary"
+    ],
+    "reference_answer": "Class LRUCache with threading.Lock, collections.OrderedDict or combined dict + doubly-linked list for O(1) get/put and thread safety.",
+    "evaluation_type": "deterministic"
+  }
+]

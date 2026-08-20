@@ -1,0 +1,15 @@
+# Core framework & visualization
+streamlit>=1.30.0
+graphviz>=0.20.1
+pandas>=2.0.0
+numpy>=1.24.0
+
+# API providers & HTTP
+python-dotenv>=1.0.0
+requests>=2.31.0
+openai>=1.10.0
+groq>=0.4.0
+google-generativeai>=0.4.0
+
+# Testing
+pytest>=7.4.0
