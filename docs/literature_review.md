@@ -28,7 +28,7 @@ Subsequent research expanded CoT into broader agentic workflows. Kojima et al. [
 
 Building upon step-by-step reasoning, autonomous agent frameworks introduced closed-loop execution cycles capable of self-directed task management without human intervention [11]. Open-source implementations such as AutoGPT [20] and BabyAGI [21] demonstrated early operational paradigms for autonomous execution loops. These agents recursively generate sub-tasks, prioritize task queues, execute actions via web browsing or local code execution, evaluate outcomes, and dynamically update their internal task lists until a top-level goal is achieved.
 
-Concurrently, research into agent memory mechanisms advanced the longevity and coherence of autonomous operations. Park et al. [14] introduced Generative Agents, establishing an architecture that combines a retrieval-based memory stream with reflection mechanisms. In this paradigm, agents continuously log raw observations into a temporal memory stream, retrieve relevant experiences based on recency, importance, and relevance, and periodically synthesize higher-level abstractions ("reflections") to guide future behavior. These memory architectures prevent context window degradation and enable agents to maintain long-term behavioral consistency across extended multi-step trajectories [13], [14].
+Concurrently, research into agent persona simulation and memory mechanisms advanced the longevity and behavioral coherence of autonomous operations. Earlier exploratory work by Park et al. [22] demonstrated that LLMs could generate diverse personas to populate prototype social computing environments (Social Simulacra). Building upon these persona simulations, Park et al. [14] introduced Generative Agents, establishing an architecture that combines a retrieval-based memory stream with reflection mechanisms. In this paradigm, agents continuously log raw observations into a temporal memory stream, retrieve relevant experiences based on recency, importance, and relevance, and periodically synthesize higher-level abstractions ("reflections") to guide future behavior. These memory architectures prevent context window degradation and enable agents to maintain long-term behavioral consistency across extended multi-step trajectories [13], [14].
 
 ## 5. Multi-Agent LLM Systems
 
@@ -50,7 +50,7 @@ The Chain topology organizes agents in a linear, sequential pipeline $A_1 \right
 The Star topology features a centralized Manager or Coordinator agent $A_c$ surrounded by specialized worker agents $A_1, A_2, \dots, A_k$ [23], [26]. Communication channels exist primarily between the central manager and individual workers ($A_c \leftrightarrow A_i$), with direct worker-to-worker communication restricted. The manager decomposes the top-level goal, assigns sub-tasks to specialized workers, gathers worker results, and synthesizes final outputs. Star architectures provide centralized oversight and clear task allocation, but the central node can become a latency and context processing bottleneck.
 
 ### 6.4 Tree / Hierarchical Architecture
-The Tree topology structures agents in a multi-tier hierarchy, where root and intermediate manager nodes delegate tasks down to subordinate branch nodes and leaf-level execution agents [27]. Information and sub-task solutions flow back up the tree through aggregation nodes. Hierarchical structures are well-suited for large-scale enterprise modeling, complex software engineering projects, and recursive problem decomposition, as they prevent any single node from being overwhelmed by global context.
+The Tree topology structures agents in a multi-tier hierarchy, where root and intermediate manager nodes delegate tasks down to subordinate branch nodes and leaf-level execution agents [27]. Information and sub-task solutions flow back up the tree through aggregation nodes. Hierarchical structures are well-suited for large-scale enterprise modeling, complex software engineering projects, and recursive problem decomposition, as they prevent any single node from being overwhelmed by global context. In literature, hierarchical and tree-structured decomposition has been explored both at the single-agent deliberative reasoning level via Tree of Thoughts (ToT) [29] and at the multi-agent organizational level via structured software development phases like ChatDev [27]. The advantages (scalable sub-goal decomposition, localized context) and operational trade-offs (multi-tier latency, routing and aggregation complexity) summarized in Table 2 represent analytical properties of hierarchical delegation that MultiAgentTopologyEval evaluates empirically.
 
 ### 6.5 Graph-Based Architecture
 The Graph topology generalizes inter-agent communication to an arbitrary directed graph $G = (V, E)$, where nodes $V$ represent specialized agents and edges $E$ denote permitted communication channels [27], [28]. Graph architectures support peer-to-peer collaboration, dynamic message routing, iterative multi-agent debate, and cyclic critique loops. While offering maximal operational flexibility and robust consensus formation, unconstrained graph architectures incur high token consumption, elevated API costs, and increased risk of infinite communication loops.
@@ -63,7 +63,7 @@ To extend step-by-step reasoning into non-linear exploration, Yao et al. [29] in
 
 For post-execution self-correction, Shinn et al. [31] introduced Reflexion, a framework that equips agents with verbal reinforcement learning. Rather than updating neural weights, Reflexion agents generate explicit verbal critiques of their past execution failures, store these critiques in a memory buffer, and condition subsequent execution attempts on past lessons learned. Similarly, Madaan et al. [32] proposed Self-Refine, demonstrating iterative solution improvement through self-generated feedback loops. Gou et al. [33] introduced CRITIC, showing that agents can self-correct more accurately when critique loops are grounded in interaction with external tools (e.g., code execution outputs, search engine responses).
 
-In multi-agent settings, debate protocols improve factual accuracy and reduce hallucination [34], [35]. Du et al. [34] demonstrated that when multiple LLM instances independently formulate solutions and iteratively debate opposing views, the collective consensus yields higher factual precision and logical consistency than any individual model's output. Li et al. [24] implemented communicative debate through cooperative role-playing in CAMEL, while Zhang et al. [35] formalized Exchange-of-Thought (EoT) protocols for multi-agent negotiation.
+In multi-agent settings, debate protocols improve factual accuracy and reduce hallucination [34], [35]. Du et al. [34] demonstrated that when multiple LLM instances independently formulate solutions and iteratively debate opposing views, the collective consensus yields higher factual precision and logical consistency than any individual model's output. Li et al. [24] implemented communicative debate through cooperative role-playing in CAMEL, while Yin et al. [35] formalized Exchange-of-Thought (EoT) protocols for multi-agent cross-model communication.
 
 ## 8. Tool Use and Agent Interaction
 
@@ -75,7 +75,7 @@ Schick et al. [36] introduced Toolformer, proving that language models can self-
 
 ## 9. Evaluation and Benchmarking of LLM Agents
 
-As LLM agents transitioned from simple prompt-response models to complex multi-step systems, traditional static NLP evaluation benchmarks (e.g., MMLU, GSM8K, HumanEval) proved insufficient [39]–[43]. Evaluating agents requires interactive, multi-turn environments that assess task execution over extended horizons.
+As LLM agents transitioned from simple prompt-response models to complex multi-step systems, traditional static NLP evaluation benchmarks (e.g., MMLU, GSM8K, HumanEval) proved insufficient [39]–[43]. While broad evaluation surveys have documented the scope and limitations of general LLM benchmark dimensions [44], evaluating autonomous agents specifically requires interactive, multi-turn environments that assess task execution over extended horizons.
 
 Early single-agent benchmark suites introduced structured environment interactions. Liu et al. [39] created AgentBench, evaluating LLMs across eight distinct environments including OS shells, databases, web browsing, and digital games. Jimenez et al. [40] developed SWE-bench, benchmarking agents on real-world GitHub issue resolution within complex Python codebases. Zhou et al. [41] introduced WebArena, assessing end-to-end web navigation across e-commerce, content management, and forum platforms. Mialon et al. [42] proposed GAIA, targeting general-purpose multi-modal assistant capabilities, while Xie et al. [43] introduced OSWorld for open-ended operating system interaction.
 
@@ -94,9 +94,9 @@ Comprehensive agent evaluation demands multi-dimensional metric suites spanning 
 
 ## 11. Reliability and Failure Modes
 
-Operating LLM agents in production reveals significant failure modes that undermine system reliability [11], [23], [44]. Key failure taxonomies documented in literature include:
+Operating LLM agents in production reveals significant failure modes that undermine system reliability [11], [23], [24]. Key failure taxonomies documented in literature include:
 
-1. **Context Drift and Role Collapse:** Over extended multi-turn interactions, agents gradually lose context fidelity, drift away from initial system prompt personas, or forget foundational directives [11], [22].
+1. **Context Drift and Role Inconsistency:** In extended multi-turn agent interactions, models frequently encounter context window saturation and attention dilution, causing agents to drift from designated system personas or exhibit degraded adherence to initial task constraints [11], [24].
 2. **Infinite Communication Loops:** In cyclic or unconstrained graph topologies, agents often enter non-terminating repetitive exchange patterns, repeatedly echoing minor variations of the same response [23], [27].
 3. **Cascading Hallucination Propagation:** In sequential chain or hierarchical architectures, an uncorrected hallucination generated by an upstream agent is treated as grounded truth by downstream agents, leading to compound system failure [24], [34].
 4. **API and Schema Violations:** Agents frequently generate malformed JSON, invalid function arguments, or invalid parameter types, triggering execution exceptions [37], [38].
@@ -117,8 +117,8 @@ To summarize the state of the art, the following comparative tables synthesize e
 | **Wu et al. [23]** | 2023 | AutoGen | Multi-Agent Conversational | Customizable conversational agent framework. | HumanEval, MATH | Lacks standardized benchmark suite across topologies. |
 | **Li et al. [24]** | 2023 | CAMEL | Multi-Agent Role-Playing | Inception prompting for autonomous agent cooperation. | Communicative tasks | Unconstrained dialogue can drift or loop. |
 | **Hong et al. [25]** | 2024 | MetaGPT | Multi-Agent SOP-based | Encodes Standard Operating Procedures into agent roles. | Software tasks | Fixed linear pipeline limit; non-flexible graph. |
-| **Chen et al. [26]** | 2023 | AgentVerse | Multi-Agent Dynamic | Environment for dynamic group assembly and debate. | Coding, Negotiation | Limited systematic tracking of API/token cost. |
-| **Du et al. [34]** | 2023 | Multi-Agent Debate | Multi-Agent Consensus | Multi-agent consensus debate for factual correctness. | MMLU, Translation | High token latency; non-hierarchical topology. |
+| **Chen et al. [26]** | 2024 | AgentVerse | Multi-Agent Dynamic | Environment for dynamic group assembly and debate. | Coding, Negotiation | Limited systematic tracking of API/token cost. |
+| **Du et al. [34]** | 2024 | Multi-Agent Debate | Multi-Agent Consensus | Multi-agent consensus debate for factual correctness. | MMLU, Translation | High token latency; non-hierarchical topology. |
 | **Zhu et al. [28]** | 2025 | MultiAgentBench / MARBLE | Multi-Agent Benchmark | Unified benchmark across collaborative/competitive tasks. | Multi-scenario benchmark | Complex simulation setup; heavy engine dependency. |
 
 ### Table 2: Architectural Comparison of Inter-Agent Topologies
@@ -216,7 +216,7 @@ This literature review has synthesized the architectural and empirical evolution
 
 [21] K. Nakajima, "BabyAGI: Task-driven autonomous agent," 2023. [Online]. Available: https://github.com/yoheinakajima/babyagi
 
-[22] J. S. Park, J. C. O'Brien, C. J. Cai, M. R. Morris, P. Liang, and M. S. Bernstein, "Social simulacra: Creating populated online spaces using computer-generated personas," in *Proceedings of the 35th Annual ACM Symposium on User Interface Software and Technology (UIST)*, pp. 1–13, 2022.
+[22] J. S. Park, L. Popowski, C. J. Cai, M. R. Morris, P. Liang, and M. S. Bernstein, "Social Simulacra: Creating populated prototypes for social computing systems," in *Proceedings of the 35th Annual ACM Symposium on User Interface Software and Technology (UIST)*, pp. 1–18, 2022.
 
 [23] Q. Wu, G. Bansal, J. Zhang, Y. Wu, B. Li, L. Tan, and H. Wang, "AutoGen: Enabling next-gen LLM applications via multi-agent conversation," *arXiv preprint arXiv:2308.08155*, 2023.
 
@@ -240,9 +240,9 @@ This literature review has synthesized the architectural and empirical evolution
 
 [33] Z. Gou, Z. Shao, Y. Gong, Y. Shen, Y. Yang, M. Huang, and N. Duan, "CRITIC: Large language models can self-correct with tool interactive critiques," in *International Conference on Learning Representations (ICLR)*, 2024.
 
-[34] Y. Du, S. Li, A. Torralba, J. B. Tenenbaum, and I. Mordatch, "Improving factuality and reasoning in language models through multi-agent debate," *arXiv preprint arXiv:2305.14325*, 2023.
+[34] Y. Du, S. Li, A. Torralba, J. B. Tenenbaum, and I. Mordatch, "Improving factuality and reasoning in language models through multi-agent debate," in *Proceedings of the 41st International Conference on Machine Learning (ICML)*, pp. 11733–11763, 2024.
 
-[35] J. Zhang, J. X. Morris, and C. Yang, "Exchange-of-Thought: Enhancing large language model reasoning through peer-to-peer conversation," *arXiv preprint arXiv:2312.01823*, 2023.
+[35] Z. Yin, Q. Sun, C. Chang, Q. Guo, J. Dai, X. Huang, and X. Qiu, "Exchange-of-Thought: Enhancing large language model capabilities through cross-model communication," in *Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing (EMNLP)*, pp. 8415–8426, 2023.
 
 [36] T. Schick, J. Dwivedi-Yu, R. Dessì, R. Raileanu, M. Lomeli, L. Zettlemoyer, A. Cancedda, and T. Scialom, "Toolformer: Language models can teach themselves to use tools," *Advances in Neural Information Processing Systems (NeurIPS)*, vol. 36, pp. 68539–68551, 2023.
 
@@ -258,6 +258,6 @@ This literature review has synthesized the architectural and empirical evolution
 
 [42] G. Mialon, C. Fourrier, C. Swift, T. Wolf, Y. LeCun, and T. Scialom, "GAIA: A benchmark for general AI assistants," in *International Conference on Learning Representations (ICLR)*, 2024.
 
-[43] T. Xie, D. Zhang, J. Chen, X. Li, S. Zhao, R. Cao, J. Zhou, G. Li, and L. V. Gool, "OSWorld: Benchmarking multimodal agents for open-ended tasks in real computer environments," *arXiv preprint arXiv:2404.07972*, 2024.
+[43] T. Xie, D. Zhang, J. Chen, X. Li, S. Zhao, R. Cao, J. Zhou, G. Li, L. V. Gool, and T. Yu, "OSWorld: Benchmarking multimodal agents for open-ended tasks in real computer environments," in *Advances in Neural Information Processing Systems (NeurIPS)*, 2024.
 
-[44] Y. Chang, X. Wang, J. Wang, Y. Wu, L. Yang, A. Zhu, X. Chen, X. Xie, C. Wang, L. Lu, and Y. Zhang, "A survey on evaluation of large language models," *ACM Transactions on Intelligent Systems and Technology (TIST)*, vol. 15, no. 3, pp. 39:1–39:45, 2024.
+[44] Y. Chang, X. Wang, J. Wang, Y. Wu, L. Yang, K. Zhu, H. Chen, X. Yi, C. Wang, Y. Wang, W. Ye, Y. Zhang, Y. Chang, P. S. Yu, Q. Yang, and X. Xie, "A survey on evaluation of large language models," *ACM Transactions on Intelligent Systems and Technology (TIST)*, vol. 15, no. 3, Art. 39, pp. 1–45, 2024.
