@@ -2,7 +2,7 @@
 
 ## 1. Introduction
 
-Large Language Models (LLMs) have emerged as a foundational paradigm in artificial intelligence, transforming natural language processing and general reasoning capabilities [1]. Built upon the Transformer architecture introduced by Vaswani et al. [2], LLMs leverage self-attention mechanisms to process sequential data and capture long-range contextual dependencies across high-dimensional token representations. The dominant pre-training and fine-tuning paradigm—exemplified by BERT [3], GPT-2 [4], GPT-3 [1], and PaLM [6]—demonstrates that self-supervised pre-training on massive text corpora endows models with broad general knowledge, which can subsequently be adapted to specialized tasks through supervised fine-tuning or instruction tuning (e.g., InstructGPT [5], FLAN [7]).
+Large Language Models (LLMs) have emerged as a foundational paradigm in artificial intelligence, transforming natural language processing and general reasoning capabilities [1]. Built upon the Transformer architecture introduced by Vaswani et al. [2], LLMs leverage self-attention mechanisms to process sequential data and capture long-range contextual dependencies across high-dimensional token representations. The dominant pre-training and fine-tuning paradigm—exemplified by BERT [3], T5 [4], GPT-3 [1], and PaLM [6]—demonstrates that self-supervised pre-training on massive text corpora endows models with broad general knowledge, which can subsequently be adapted to specialized tasks through supervised fine-tuning or instruction tuning (e.g., InstructGPT [5], FLAN [7]).
 
 Empirical investigations into model scaling have established fundamental scaling laws governing LLM performance [8], [9]. Kaplan et al. [8] demonstrated that cross-entropy loss scales as a power law with respect to parameter count, dataset size, and compute budget. Hoffmann et al. [9] refined these findings with the Chinchilla scaling laws, highlighting the equal importance of scaling tokens alongside parameters. Crucially, as parameter scale exceeds critical thresholds, models exhibit emergent abilities—such as few-shot learning, multi-step arithmetic, symbolic manipulation, and complex instruction following—that are absent in smaller models [10]. These capabilities marked a shift from narrow task-specific modeling to general-purpose language foundation models.
 
@@ -10,10 +10,10 @@ Empirical investigations into model scaling have established fundamental scaling
 
 The evolution of language modeling has witnessed a paradigm shift from passive next-token prediction to active, goal-directed agentic behavior [11], [12]. Traditional LLMs function primarily as stateless pattern completers, responding to isolated prompts without persistent state, dynamic environmental interactions, or real-time feedback loops. In contrast, LLM-based autonomous agents use the core language model as a central reasoning engine (or "brain"), integrated with external modules for perception, long-term memory, planning, and tool execution [13].
 
-As formalized by Weng [13] and expanded by Xi et al. [12], an LLM agent architecture typically comprises four structural components:
+As synthesized in agent cognitive architecture literature (e.g., Sumers et al. [13], Wang et al. [11], and Xi et al. [12]), an LLM agent architecture typically comprises four structural components:
 1. **Brain / Reasoning Engine:** The underlying LLM responsible for parsing goals, synthesizing contextual information, deliberating over action pathways, and formulating decisions.
 2. **Perception Module:** Mechanisms that convert multimodal or textual environmental signals, system feedback, and inter-agent messages into structured contextual inputs.
-3. **Memory Module:** Dual-tier context architectures comprising short-term working memory (in-context conversation buffers) and long-term memory (vector stores, semantic databases, or explicit symbolic records) [14].
+3. **Memory Module:** Dual-tier context architectures comprising short-term working memory (in-context conversation buffers) and long-term memory (vector stores, semantic databases, or explicit symbolic records) [13], [14].
 4. **Action / Tool Space:** Executable APIs, functions, search engines, or physical actuators enabling the agent to affect state changes in its environment [15].
 
 This architectural synthesis enables agents to operate in dynamic, non-deterministic environments, iteratively pursuing complex goals through multi-step execution loops.
@@ -26,15 +26,15 @@ Subsequent research expanded CoT into broader agentic workflows. Kojima et al. [
 
 ## 4. Autonomous LLM Agents
 
-Building upon step-by-step reasoning, autonomous agent frameworks introduced closed-loop execution cycles capable of self-directed task management without human intervention [11]. Open-source implementations such as AutoGPT [20] and BabyAGI [21] demonstrated early operational paradigms for autonomous execution loops. These agents recursively generate sub-tasks, prioritize task queues, execute actions via web browsing or local code execution, evaluate outcomes, and dynamically update their internal task lists until a top-level goal is achieved.
+Building upon step-by-step reasoning, autonomous agent frameworks introduced closed-loop execution cycles capable of self-directed task management without continuous human intervention [11]. Representative architectures such as HuggingGPT (Shen et al. [20]) and Voyager (Wang et al. [21]) demonstrated operational paradigms for closed-loop execution. These systems recursively decompose objectives into sub-tasks, prioritize execution queues, invoke tools or external models, evaluate outcomes against feedback, and dynamically update execution trajectories until top-level goals are satisfied (with community prototypes such as AutoGPT and BabyAGI cataloged in academic surveys [11]).
 
-Concurrently, research into agent persona simulation and memory mechanisms advanced the longevity and behavioral coherence of autonomous operations. Earlier exploratory work by Park et al. [22] demonstrated that LLMs could generate diverse personas to populate prototype social computing environments (Social Simulacra). Building upon these persona simulations, Park et al. [14] introduced Generative Agents, establishing an architecture that combines a retrieval-based memory stream with reflection mechanisms. In this paradigm, agents continuously log raw observations into a temporal memory stream, retrieve relevant experiences based on recency, importance, and relevance, and periodically synthesize higher-level abstractions ("reflections") to guide future behavior. These memory architectures prevent context window degradation and enable agents to maintain long-term behavioral consistency across extended multi-step trajectories [13], [14].
+Concurrently, research into agent persona simulation and memory mechanisms advanced the longevity and behavioral coherence of autonomous operations. Earlier exploratory work by Park et al. [22] demonstrated that LLMs could generate diverse personas to populate prototype social computing environments (Social Simulacra). Building upon these persona simulations, Park et al. [14] introduced Generative Agents, establishing an architecture that combines a retrieval-based memory stream with reflection mechanisms. In this paradigm, agents continuously log raw observations into a temporal memory stream, retrieve relevant experiences based on recency, importance, and relevance, and periodically synthesize higher-level abstractions ("reflections") to guide future behavior. These retrieval-augmented memory architectures mitigate context window saturation by selectively fetching salient observations, thereby assisting agents in maintaining behavioral consistency over extended interactions [13], [14].
 
 ## 5. Multi-Agent LLM Systems
 
-While single-agent systems demonstrate impressive capabilities on isolated tasks, they encounter severe cognitive and operational bottlenecks when scaled to complex, multi-faceted problems. Single agents suffer from context window saturation, role drift, catastrophic forgetting, and an inability to perform parallel specialization [23], [24]. These limitations catalyzed the transition toward Multi-Agent LLM Systems (MAS), wherein multiple specialized agents collaborate, communicate, and debate within structured topological networks [23]–[27].
+While single-agent systems demonstrate impressive capabilities on isolated tasks, they encounter severe cognitive and operational bottlenecks when scaled to complex, multi-faceted problems. Single agents encounter operational bottlenecks in complex settings, including context window saturation, in-context information loss, persona drift across extended multi-turn exchanges, and an inability to perform parallel specialization [23], [24]. These limitations catalyzed the transition toward Multi-Agent LLM Systems (MAS), wherein multiple specialized agents collaborate, communicate, and debate within structured topological networks [23]–[27].
 
-Multi-agent paradigms leverage the principle of modular division of labor [25]. By assigning distinct system prompts, functional tools, and specialized agent personas (e.g., Planner, Researcher, Analyst, Critic, Developer), complex goals are decomposed into targeted sub-problems. Frameworks such as AutoGen [23], CAMEL [24], MetaGPT [25], and AgentVerse [26] demonstrate that multi-agent teams achieve superior problem-solving performance, higher factual consistency, and greater robustness compared to monolithic single-agent baselines.
+Multi-agent paradigms leverage the principle of modular division of labor [25]. By assigning distinct system prompts, functional tools, and specialized agent personas (e.g., Planner, Researcher, Analyst, Critic, Developer), complex goals are decomposed into targeted sub-problems. Frameworks such as AutoGen [23], CAMEL [24], MetaGPT [25], and AgentVerse [26] demonstrate that structured multi-agent configurations can achieve higher task accuracy and factual consistency on complex decomposition and collaborative tasks compared to single-agent baselines, albeit with increased token expenditure and coordination overhead.
 
 ## 6. Multi-Agent Collaboration Architectures
 
@@ -50,7 +50,7 @@ The Chain topology organizes agents in a linear, sequential pipeline $A_1 \right
 The Star topology features a centralized Manager or Coordinator agent $A_c$ surrounded by specialized worker agents $A_1, A_2, \dots, A_k$ [23], [26]. Communication channels exist primarily between the central manager and individual workers ($A_c \leftrightarrow A_i$), with direct worker-to-worker communication restricted. The manager decomposes the top-level goal, assigns sub-tasks to specialized workers, gathers worker results, and synthesizes final outputs. Star architectures provide centralized oversight and clear task allocation, but the central node can become a latency and context processing bottleneck.
 
 ### 6.4 Tree / Hierarchical Architecture
-The Tree topology structures agents in a multi-tier hierarchy, where root and intermediate manager nodes delegate tasks down to subordinate branch nodes and leaf-level execution agents [27]. Information and sub-task solutions flow back up the tree through aggregation nodes. Hierarchical structures are well-suited for large-scale enterprise modeling, complex software engineering projects, and recursive problem decomposition, as they prevent any single node from being overwhelmed by global context. In literature, hierarchical and tree-structured decomposition has been explored both at the single-agent deliberative reasoning level via Tree of Thoughts (ToT) [29] and at the multi-agent organizational level via structured software development phases like ChatDev [27]. The advantages (scalable sub-goal decomposition, localized context) and operational trade-offs (multi-tier latency, routing and aggregation complexity) summarized in Table 2 represent analytical properties of hierarchical delegation that MultiAgentTopologyEval evaluates empirically.
+The Tree topology structures agents in a multi-tier hierarchy, where root coordinator nodes delegate sub-tasks down to subordinate branch managers and leaf-level execution agents [26], [28]. Information and sub-task solutions flow back up the tree through aggregation nodes. Hierarchical structures are well-suited for large-scale enterprise modeling, complex software engineering projects, and recursive problem decomposition, as they prevent any single node from being overwhelmed by global context. In literature, hierarchical multi-agent coordination has been benchmarked in MultiAgentBench (Zhu et al. [28]) and dynamic organizational networks (Chen et al. [26]), distinguishing structural inter-agent delegation from single-agent prompt search heuristics like Tree of Thoughts [29]. The advantages (scalable sub-goal decomposition, localized context) and operational trade-offs (multi-tier latency, routing and aggregation complexity) summarized in Table 2 represent analytical properties of hierarchical delegation that MultiAgentTopologyEval evaluates empirically.
 
 ### 6.5 Graph-Based Architecture
 The Graph topology generalizes inter-agent communication to an arbitrary directed graph $G = (V, E)$, where nodes $V$ represent specialized agents and edges $E$ denote permitted communication channels [27], [28]. Graph architectures support peer-to-peer collaboration, dynamic message routing, iterative multi-agent debate, and cyclic critique loops. While offering maximal operational flexibility and robust consensus formation, unconstrained graph architectures incur high token consumption, elevated API costs, and increased risk of infinite communication loops.
@@ -87,7 +87,7 @@ Comprehensive agent evaluation demands multi-dimensional metric suites spanning 
 
 - **Task Success & Milestone Score:** Measures binary completion of top-level objectives as well as granular sub-goal achievement (milestone tracking) [28], [40].
 - **Reasoning Performance & Accuracy:** Assesses logical correctness, step verification, and absence of hallucinated facts in agent reasoning chains [16], [34].
-- **Constraint Satisfaction Rate:** Evaluates whether agent outputs strictly comply with explicit domain, budget, temporal, or operational constraints specified in the prompt [28].
+- **Constraint Satisfaction Rate:** Evaluates whether agent outputs strictly comply with explicit domain, budget, temporal, or operational constraints specified in the prompt (an essential operational metric for reliable agent deployment [44]).
 - **Token Consumption & Financial Cost:** Quantifies total prompt tokens, completion tokens, and dollar expenditures accrued across multi-turn agent turns [23], [25].
 - **Execution Latency & Turn Efficiency:** Tracks end-to-end task duration, per-turn response latency, and network round-trip overhead [27], [28].
 - **Reliability & Failure Metrics:** Quantifies system-level stability by tracking API failures, rate limit breaches, JSON schema errors, infinite loop traps, and request timeouts [11], [23].
@@ -96,7 +96,7 @@ Comprehensive agent evaluation demands multi-dimensional metric suites spanning 
 
 Operating LLM agents in production reveals significant failure modes that undermine system reliability [11], [23], [24]. Key failure taxonomies documented in literature include:
 
-1. **Context Drift and Role Inconsistency:** In extended multi-turn agent interactions, models frequently encounter context window saturation and attention dilution, causing agents to drift from designated system personas or exhibit degraded adherence to initial task constraints [11], [24].
+1. **Context Drift and Role Inconsistency:** In extended multi-turn agent interactions, models frequently experience context expansion and attention dilution, which empirically correlate with agents drifting from designated system personas and exhibiting degraded adherence to initial task constraints [11], [24].
 2. **Infinite Communication Loops:** In cyclic or unconstrained graph topologies, agents often enter non-terminating repetitive exchange patterns, repeatedly echoing minor variations of the same response [23], [27].
 3. **Cascading Hallucination Propagation:** In sequential chain or hierarchical architectures, an uncorrected hallucination generated by an upstream agent is treated as grounded truth by downstream agents, leading to compound system failure [24], [34].
 4. **API and Schema Violations:** Agents frequently generate malformed JSON, invalid function arguments, or invalid parameter types, triggering execution exceptions [37], [38].
@@ -114,7 +114,7 @@ To summarize the state of the art, the following comparative tables synthesize e
 | **Yao et al. [15]** | 2023 | ReAct Framework | Single-Agent | Synergizes reasoning traces with environment actions. | HotpotQA, ALFWorld | Susceptible to compounding single-agent errors. |
 | **Shinn et al. [31]** | 2023 | Reflexion | Single-Agent + Memory | Verbal reinforcement learning via self-reflection buffers. | HumanEval, WebShop | High context usage; single-agent bottleneck. |
 | **Yao et al. [29]** | 2023 | Tree of Thoughts (ToT) | Single-Agent Search | Deliberate non-linear search (BFS/DFS) over thought trees. | Game of 24, Creative Writing | Expensive search compute; no multi-agent roles. |
-| **Wu et al. [23]** | 2023 | AutoGen | Multi-Agent Conversational | Customizable conversational agent framework. | HumanEval, MATH | Lacks standardized benchmark suite across topologies. |
+| **Wu et al. [23]** | 2024 | AutoGen | Multi-Agent Conversational | Customizable conversational agent framework. | HumanEval, MATH | Lacks standardized benchmark suite across topologies. |
 | **Li et al. [24]** | 2023 | CAMEL | Multi-Agent Role-Playing | Inception prompting for autonomous agent cooperation. | Communicative tasks | Unconstrained dialogue can drift or loop. |
 | **Hong et al. [25]** | 2024 | MetaGPT | Multi-Agent SOP-based | Encodes Standard Operating Procedures into agent roles. | Software tasks | Fixed linear pipeline limit; non-flexible graph. |
 | **Chen et al. [26]** | 2024 | AgentVerse | Multi-Agent Dynamic | Environment for dynamic group assembly and debate. | Coding, Negotiation | Limited systematic tracking of API/token cost. |
@@ -128,45 +128,45 @@ To summarize the state of the art, the following comparative tables synthesize e
 | **Single-Agent** | Isolated execution | Zero inter-agent overhead; minimal latency per step. | Context saturation; single point of failure; no peer critique. | Wei et al. [16], Yao et al. [15] |
 | **Chain** | Linear sequential pipeline | Clear step-by-step progression; simple SOP mapping. | Cascading error propagation; no reverse feedback loops. | Hong et al. [25], Li et al. [24] |
 | **Star / Centralized** | Hub-and-spoke delegation | Centralized oversight; clear role delegation. | Coordinator node bottleneck; high coordinator context load. | Wu et al. [23], Chen et al. [26] |
-| **Tree / Hierarchical** | Multi-tier abstraction | Scalable sub-goal decomposition; low local context load. | Deep tree latency; complex routing and aggregation logic. | Qian et al. [27], Yao et al. [29] |
+| **Tree / Hierarchical** | Multi-tier abstraction | Scalable sub-goal decomposition; low local context load. | Deep tree latency; complex routing and aggregation logic. | Zhu et al. [28], Chen et al. [26] |
 | **Graph-Based** | Peer-to-peer network | Dynamic interaction; maximum flexibility; strong consensus. | High token cost; high latency; risk of infinite loop traps. | Zhu et al. [28], Du et al. [34] |
 
 ### Table 3: Synthesis of Evaluation Dimensions Across Benchmark Frameworks
 
 | Evaluation Framework | Task Success | Reasoning | Token / Cost | Latency | Reliability & Failure Analysis | Multi-Topology Comparison |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| :--- | :---: | :---: | :---: | :---: | :--- | :---: |
 | **AgentBench [39]** | High | Medium | Low | Low | Low | No (Single-agent focused) |
 | **SWE-bench [40]** | High | High | Low | Low | Low | No (Single-agent focused) |
 | **WebArena [41]** | High | Medium | Low | Low | Low | No (Single-agent focused) |
 | **AgentVerse [26]** | High | Medium | Low | Low | Medium | Partial (Dynamic group focus) |
-| **MultiAgentBench [28]** | High | High | Medium | Medium | High | Yes (Multi-scenario focus) |
+| **MultiAgentBench [28]** | High | High | Medium | Medium | Partial (MAST behavioral failure profiling; lacks API runtime, schema, and cost failure telemetry) | Yes (Multi-scenario focus) |
 
 ## 13. Research Gap
 
-Despite rapid advancements in multi-agent LLM systems, a critical synthesis of existing literature reveals several key areas where evaluation methodologies can be significantly strengthened:
+Despite significant progress in evaluating multi-agent Large Language Model systems, existing evaluation methodologies present critical operational limitations:
 
-1. **Controlled Multi-Topology Comparisons:** While existing benchmarks such as MultiAgentBench [28] have advanced the evaluation of collaboration and competition across interaction topologies, many multi-agent frameworks (e.g., MetaGPT [25], CAMEL [24]) remain tied to specific architectural paradigms (such as fixed sequential pipelines or unconstrained conversational groups). There remains an important need for controlled empirical studies that systematically isolate topology from model capability by evaluating identical benchmark tasks across canonical **Single, Star, Chain, Tree, and Graph topologies** under unified prompting budgets and base model configurations.
-2. **Standardized Fine-Grained Operational Profiling:** While current benchmark suites primarily report high-level task completion and milestone scores, comparatively less emphasis has been placed on granular operational metrics. In practical deployment scenarios, understanding the trade-offs between **token consumption (prompt vs. completion), financial expenditure, step-level latency distributions, and strict constraint satisfaction rates** is essential for cost-effective system design.
-3. **Systematic Failure Mode Diagnostics:** Existing benchmark suites frequently evaluate binary task success versus failure without systematically logging and categorizing runtime failure modes. A rigorous operational evaluation requires fine-grained tracking of **agent communication loops, JSON schema parsing errors, API rate-limit stalls, request timeouts, and context drift**.
-4. **Accessible and Deterministic Evaluation Environments:** Many existing multi-agent benchmark suites rely on heavy external simulation engines (e.g., Minecraft environments, complex web servers) that introduce substantial setup complexity, non-deterministic execution noise, and computational barriers. Lightweight, reproducible benchmark environments are necessary to facilitate accessible, standardized evaluation across diverse model families.
+1. **Controlled Multi-Topology Comparisons:** Foundational multi-agent benchmarks—most notably MultiAgentBench [28] and AgentVerse [26]—have demonstrated that interaction topology significantly impacts task outcomes across collaborative and competitive scenarios. However, many multi-agent studies remain anchored to specific monolithic architectures (e.g., fixed SOP chains in MetaGPT [25] or unstructured dialogue in CAMEL [24]). There remains a vital need for controlled empirical studies that systematically isolate interaction topology from base model capability by evaluating identical benchmark tasks across canonical **SINGLE, CHAIN, STAR, TREE, and GRAPH** topologies under standardized prompting budgets and base model backends.
+2. **Fine-Grained Operational Profiling:** Current benchmark suites predominantly focus on high-level task completion and milestone scores, leaving computational and operational trade-offs under-characterized. In practical deployment scenarios, understanding the simultaneous trade-offs between **decoupled prompt versus completion token consumption, financial API expenditures, step-level latency distributions, and strict constraint satisfaction rates** is essential for cost-effective, dependable system design.
+3. **Systematic Runtime Failure Diagnostics:** Existing benchmark suites frequently evaluate binary task success versus failure or focus primarily on conversational coordination anomalies (e.g., MAST profiling in MultiAgentBench [28]). A rigorous engineering evaluation requires systematic, automated tracking of production-grade runtime failure modes, including **API rate-limit saturation (HTTP 429), provider timeout exceptions, JSON schema parsing errors, and non-terminating communication loops**.
+4. **Accessible and Deterministic Evaluation Environments:** Many existing multi-agent benchmark suites rely on heavy, non-deterministic external simulation engines (e.g., Minecraft virtual worlds, multi-player game daemons) that introduce substantial setup overhead, execution variance, and computational barriers. Accessible, CPU-compatible benchmark testbeds equipped with deterministic offline execution modes are required to facilitate rigorous, reproducible evaluation across diverse model families.
 
 ## 14. Relevance to MultiAgentTopologyEval
 
-To address these identified research gaps, **MultiAgentTopologyEval** is introduced as a comprehensive research and evaluation framework designed for systematic comparative analysis of LLM multi-agent architectures.
+To address these identified research gaps, **MultiAgentTopologyEval** is introduced as an empirical evaluation and operational profiling framework designed for systematic comparative analysis of LLM multi-agent architectures under controlled, reproducible conditions.
 
-MultiAgentTopologyEval establishes a modular execution architecture that explicitly isolates interaction topology from base model capability. The framework enables controlled benchmarking across five canonical topologies:
-- **SINGLE:** Single-agent baseline execution loop.
-- **CHAIN:** Sequential pipeline with step-by-step handoff.
+MultiAgentTopologyEval does not propose a new foundational language model, nor does it introduce a novel multi-agent interaction architecture or claim to invent topology evaluation. Rather, it serves as an empirical measurement testbed that explicitly isolates interaction topology from base model capability. The framework enables controlled benchmarking across five canonical topologies:
+- **SINGLE:** Single-agent baseline execution loop serving as the reference control.
+- **CHAIN:** Sequential pipeline with step-by-step handoff and progressive refinement.
 - **STAR:** Centralized coordinator delegating to specialized worker nodes.
-- **TREE:** Multi-tier hierarchical sub-task decomposition.
+- **TREE:** Multi-tier hierarchical sub-task decomposition and aggregation.
 - **GRAPH:** Configurable mesh network supporting peer-to-peer critique and consensus.
 
-Furthermore, MultiAgentTopologyEval implements a multi-dimensional metric collection engine that systematically evaluates:
-1. **Task Performance:** Task success rate, milestone completion score, and reasoning accuracy.
-2. **Operational Efficiency:** Total token usage (prompt and completion), financial cost estimation, and end-to-end latency.
-3. **System Reliability & Guardrails:** Constraint satisfaction rate, API failure rates, rate-limit errors, invalid JSON schema responses, request timeouts, and automated agent-loop detection.
+Furthermore, MultiAgentTopologyEval establishes a multi-dimensional telemetry engine that systematically profiles:
+1. **Task Performance:** Objective task success rate, milestone completion score, and reasoning accuracy.
+2. **Operational Efficiency:** Decoupled prompt and completion token usage, real-time financial API cost estimation, and end-to-end execution latency.
+3. **System Reliability & Guardrails:** Deterministic constraint satisfaction rate, API rate-limit errors, request timeouts, invalid JSON schema responses, and automated agent-loop detection.
 
-By replacing opaque game engines with a transparent, reproducible benchmark task suite spanning planning, constraint satisfaction, synthesis, reasoning, decision making, collaboration, and coding, MultiAgentTopologyEval provides researchers with an empirical testbed to evaluate the exact cost-performance-reliability trade-offs inherent in multi-agent orchestration.
+By complementing simulation-heavy environments with an accessible, reproducible benchmark task suite spanning planning, constraint satisfaction, synthesis, reasoning, decision making, collaboration, and coding, MultiAgentTopologyEval provides researchers with an empirical testbed to evaluate the exact cost-performance-reliability trade-offs inherent in multi-agent orchestration.
 
 ## 15. Summary
 
@@ -180,7 +180,7 @@ This literature review has synthesized the architectural and empirical evolution
 
 [3] J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova, "BERT: Pre-training of deep bidirectional transformers for language understanding," in *Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics (NAACL)*, pp. 4171–4186, 2019.
 
-[4] A. Radford, J. Wu, R. Child, D. Luan, D. Amodei, and I. Sutskever, "Language models are unsupervised multitask learners," *OpenAI Blog*, vol. 1, no. 8, p. 9, 2019.
+[4] C. Raffel, N. Shazeer, A. Roberts, K. Lee, S. Narang, M. Matena, Y. Zhou, W. Li, and P. J. Liu, "Exploring the limits of transfer learning with a unified text-to-text transformer," *Journal of Machine Learning Research (JMLR)*, vol. 21, no. 140, pp. 1–67, 2020.
 
 [5] L. Ouyang, J. Wu, X. Jiang, D. Almeida, C. Wainwright, P. Mishkin, C. Zhang, S. Agarwal, K. Slama, A. Ray, J. Schulman, J. Hilton, F. Kelton, L. Miller, M. Simens, A. Askell, P. Welinder, P. Christiano, J. Leike, and R. Lowe, "Training language models to follow instructions with human feedback," *Advances in Neural Information Processing Systems (NeurIPS)*, vol. 35, pp. 27730–27744, 2022.
 
@@ -196,9 +196,9 @@ This literature review has synthesized the architectural and empirical evolution
 
 [11] L. Wang, C. Ma, X. Feng, Z. Zhang, H. Yang, J. Zhang, Z. Chen, L. Tang, X. Zhang, Y. Lin, W. X. Zhao, Z. Wei, and J.-R. Wen, "A survey on large language model based autonomous agents," *Frontiers of Computer Science*, vol. 18, no. 6, p. 186345, 2024.
 
-[12] Z. Xi, W. Chen, X. Guo, W. He, Y. Ding, B. Hong, M. Zhang, J. Wang, S. Jin, E. Zhou, R. Zheng, X. Fan, X. Wang, L. Xiong, Q. Zhou, W. Weers, Y. Zhang, Z. Liu, and Q. Zhang, "The rise and potential of large language model based agents: A survey," *arXiv preprint arXiv:2309.07864*, 2023.
+[12] Z. Xi, W. Chen, X. Guo, W. He, Y. Ding, B. Hong, M. Zhang, J. Wang, S. Jin, E. Zhou, R. Zheng, X. Fan, X. Wang, L. Xiong, Q. Zhou, W. Weers, Y. Zhang, Z. Liu, and Q. Zhang, "The rise and potential of large language model based agents: A survey," *Science China Information Sciences*, vol. 68, no. 2, Art. 121101, pp. 1–44, 2025.
 
-[13] L. Weng, "LLM-powered autonomous agents," *Weng's Blog*, 2023. [Online]. Available: https://lilianweng.github.io/posts/2023-06-23-agent/
+[13] T. R. Sumers, S. Yao, K. Narasimhan, and T. L. Griffiths, "Cognitive architectures for language agents," *Transactions on Machine Learning Research (TMLR)*, 2024.
 
 [14] J. S. Park, J. C. O'Brien, C. J. Cai, M. R. Morris, P. Liang, and M. S. Bernstein, "Generative agents: Interactive simulacra of human behavior," in *Proceedings of the 36th Annual ACM Symposium on User Interface Software and Technology (UIST)*, pp. 1–22, 2023.
 
@@ -212,13 +212,13 @@ This literature review has synthesized the architectural and empirical evolution
 
 [19] W. Chen, X. Ma, X. Wang, and W. W. Cohen, "Program of Thought prompting: Disentangling computation from reasoning for numerical reasoning tasks," *Transactions on Machine Learning Research (TMLR)*, 2023.
 
-[20] T. Richards, "AutoGPT: An autonomous GPT-4 experiment," 2023. [Online]. Available: https://github.com/Significant-Gravitas/AutoGPT
+[20] Y. Shen, K. Song, X. Tan, D. Li, W. Lu, and Y. Zhuang, "HuggingGPT: Solving AI tasks with ChatGPT and its friends in Hugging Face," in *Advances in Neural Information Processing Systems (NeurIPS)*, vol. 36, pp. 38154–38180, 2023.
 
-[21] K. Nakajima, "BabyAGI: Task-driven autonomous agent," 2023. [Online]. Available: https://github.com/yoheinakajima/babyagi
+[21] G. Wang, Y. Xie, Y. Jiang, A. Mandlekar, C. Xiao, Y. Zhu, L. Fan, and A. Anandkumar, "Voyager: An open-ended embodied agent with large language models," *Transactions on Machine Learning Research (TMLR)*, 2024.
 
 [22] J. S. Park, L. Popowski, C. J. Cai, M. R. Morris, P. Liang, and M. S. Bernstein, "Social Simulacra: Creating populated prototypes for social computing systems," in *Proceedings of the 35th Annual ACM Symposium on User Interface Software and Technology (UIST)*, pp. 1–18, 2022.
 
-[23] Q. Wu, G. Bansal, J. Zhang, Y. Wu, B. Li, L. Tan, and H. Wang, "AutoGen: Enabling next-gen LLM applications via multi-agent conversation," *arXiv preprint arXiv:2308.08155*, 2023.
+[23] Q. Wu, G. Bansal, J. Zhang, Y. Wu, B. Li, L. Tan, and H. Wang, "AutoGen: Enabling next-gen LLM applications via multi-agent conversation," in *Proceedings of the First Conference on Language Modeling (COLM)*, 2024.
 
 [24] G. Li, H. A. A. K. Hammoud, H. Itani, D. Khizbullin, and B. Ghanem, "CAMEL: Communicative agents for 'mind' exploration of large language model society," *Advances in Neural Information Processing Systems (NeurIPS)*, vol. 36, pp. 51991–52008, 2023.
 
@@ -248,7 +248,7 @@ This literature review has synthesized the architectural and empirical evolution
 
 [37] Y. Qin, S. Liang, Y. Ye, K. Zhu, L. Yan, Y. Lu, Y. Lin, X. Cong, X. Tang, B. Qian, S. Zhao, R. Tian, R. Xie, J. Zhou, M. Gerstein, D. Li, L. Liu, and M. Sun, "ToolLLM: Facilitating large language models to master 16000+ real-world APIs," in *International Conference on Learning Representations (ICLR)*, 2024.
 
-[38] S. G. Patil, T. Zhang, X. Wang, and J. E. Gonzalez, "Gorilla: Large language model connected with massive APIs," *arXiv preprint arXiv:2305.15334*, 2023.
+[38] S. G. Patil, T. Zhang, X. Wang, and J. E. Gonzalez, "Gorilla: Large language model connected with massive APIs," in *Advances in Neural Information Processing Systems (NeurIPS)*, vol. 37, 2024.
 
 [39] X. Liu, H. Yu, H. Zhang, Y. Xu, X. Lei, H. Lai, Y. Gu, H. Ding, K. Men, K. Yang, S. Zhang, X. Deng, A. Zeng, Z. Du, C. Zhang, S. Shen, T. Zhang, Y. Su, H. Sun, M. Huang, Y. Dong, and J. Tang, "AgentBench: Evaluating LLMs as agents," in *International Conference on Learning Representations (ICLR)*, 2024.
 

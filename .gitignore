@@ -1,9 +1,17 @@
-# Environment & Secrets
+# Environment variables & Secrets
 .env
 .env.*
 !.env.example
 *.env
+*.pem
+*.key
 .streamlit/secrets.toml
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
 
 # Python Bytecode & Cache
 __pycache__/
@@ -11,14 +19,22 @@ __pycache__/
 *$py.class
 .pytest_cache/
 .mypy_cache/
-.venv/
-venv/
-env/
+.coverage
+htmlcov/
+
+# Python packaging & build
+build/
+dist/
+*.egg-info/
 
 # Data Outputs & Logs (preserve directory structure)
 data/results/*
 !data/results/.gitkeep
 docs/research_report_*.md
+logs/
+*.log
+*.tmp
+*.bak
 
 # IDE, Agent & OS Files
 .vscode/
@@ -29,9 +45,5 @@ docs/research_report_*.md
 scratch/
 temp/
 tmp/
-*.log
-*.tmp
-*.bak
 .DS_Store
 Thumbs.db
-
