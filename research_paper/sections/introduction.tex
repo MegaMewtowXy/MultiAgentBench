@@ -1,0 +1,43 @@
+\section{Introduction}
+\label{sec:introduction}
+
+The emergence of Large Language Models (LLMs) built upon Transformer self-attention mechanisms~\cite{Vaswani2017Attention,Devlin2019BERT,Brown2020Language} has driven a fundamental transition in artificial intelligence: moving from passive text generation toward active, goal-directed autonomous agents~\cite{Wang2024Survey,Xi2025Rise}. Equipping foundation models with deliberative reasoning loops (such as Chain-of-Thought~\cite{Wei2022Chain} and ReAct~\cite{Yao2023ReAct}), external working memory~\cite{Park2023Generative,Sumers2024Cognitive}, and API tool execution~\cite{Schick2023Toolformer,Qin2024ToolLLM,Patil2024Gorilla} enables autonomous agents to iteratively decompose and solve complex problems in dynamic software environments.
+
+Despite these advancements, monolithic single-agent systems encounter severe operational and cognitive bottlenecks when confronted with multi-faceted, high-dimensional objectives. Single agents frequently suffer from prompt context saturation, persona drift across extended multi-turn exchanges, and an inability to execute parallel specialization~\cite{Wu2024AutoGen,Li2023CAMEL}. These limitations have catalyzed the rapid evolution of Multi-Agent Systems (MAS)~\cite{Hong2024MetaGPT,Chen2024AgentVerse,Qian2024Communicative}, wherein multiple specialized LLM agents (e.g., Planner, Researcher, Analyst, Critic, and Finalizer) coordinate within structured communication networks to achieve common goals.
+
+\subsection{The Role of Interaction Topology}
+In multi-agent orchestration, the \textit{interaction topology}---the directed communication graph defining message routing channels, task delegation hierarchies, and feedback pathways---serves as the primary structural governor of execution behavior. Literature identifies several canonical collaboration topologies:
+\begin{itemize}
+    \item \textbf{\textsc{Single}} represents the isolated baseline control where a single model processes instructions in a closed turn.
+    \item \textbf{\textsc{Chain}} implements a sequential pipeline ($A_1 \rightarrow A_2 \rightarrow \dots \rightarrow A_n$) following standard operating procedures (SOPs)~\cite{Hong2024MetaGPT}.
+    \item \textbf{\textsc{Star}} organizes agents into a hub-and-spoke centralized architecture where a central coordinator delegates sub-tasks to specialized satellite workers~\cite{Wu2024AutoGen}.
+    \item \textbf{\textsc{Tree}} decomposes objectives through multi-tier hierarchical delegation from root directors down to intermediate leads and leaf execution agents~\cite{Chen2024AgentVerse,Zhu2025MultiAgentBench}.
+    \item \textbf{\textsc{Graph}} provides a general mesh network supporting peer-to-peer communicative consensus, cyclic critiques, and dynamic debate loops~\cite{Du2024Improving,Zhu2025MultiAgentBench}.
+\end{itemize}
+
+While interaction topology intuitively influences problem-solving quality, its systemic trade-offs remain poorly quantified. Adding communication edges and verification stages can improve factual rigor, but each additional hop incurs compounding wall-clock latency, token explosion, API financial expenditure, and increased vulnerability to runtime operational faults (such as HTTP 429 rate-limit breaches, JSON schema parsing exceptions, provider timeouts, and infinite agent loops).
+
+\subsection{Limitations of Existing Benchmarks}
+Existing agent benchmarks, such as AgentBench~\cite{Liu2024AgentBench}, SWE-bench~\cite{Jimenez2024SWEbench}, WebArena~\cite{Zhou2024WebArena}, and GAIA~\cite{Mialon2024GAIA}, have primarily targeted single-agent problem solving within specific digital environments (e.g., operating system shells or web navigation). Recently, Zhu et al.~\cite{Zhu2025MultiAgentBench} introduced \textit{MultiAgentBench} (powered by the MARBLE engine), representing a foundational advance by evaluating multi-agent collaboration and competition across interactive scenarios (such as Minecraft construction and Werewolf social deduction games).
+
+However, current evaluation methodologies exhibit critical operational limitations:
+\begin{enumerate}
+    \item \textit{Coupled Architectures:} Multi-agent frameworks frequently evaluate their proprietary systems (e.g., MetaGPT's fixed SOP pipeline~\cite{Hong2024MetaGPT} or ChatDev's waterfall phase chat~\cite{Qian2024Communicative}) without systematically isolating the pure effect of interaction topology from the underlying model prompt template.
+    \item \textit{Coarse-Grained Operational Metrics:} Existing benchmark suites predominantly report high-level task success rates or milestone KPIs, while leaving step-level execution latency distributions, decoupled prompt versus completion token consumption, and financial API expenditures under-characterized.
+    \item \textit{Absence of Runtime Failure Telemetry:} Benchmarks generally treat failed tasks as binary non-completions, omitting structured diagnostics for production runtime exceptions (such as API rate limits, malformed JSON schemas, network timeouts, and circular messaging).
+    \item \textit{Environmental Weight and Non-Determinism:} Relying on complex game simulators introduces significant execution noise, heavy local dependencies, and severe computational barriers that hinder reproducible academic benchmarking.
+\end{enumerate}
+
+\subsection{Contributions of This Work}
+To address these gaps, we propose \textbf{MultiAgentTopologyEval}, a controlled empirical evaluation and operational profiling framework designed to systematically isolate and compare multi-agent LLM interaction topologies. MultiAgentTopologyEval does not introduce a new foundational language model or claim to invent topology evaluation; rather, it provides an open-source, reproducible evaluation testbed that instruments fine-grained systems-level telemetry.
+
+The principal contributions of this work are as follows:
+\begin{itemize}
+    \item \textbf{Controlled Multi-Topology Harness:} We design a standardized execution engine that evaluates identical task instances across five canonical topologies (\textsc{Single}, \textsc{Chain}, \textsc{Star}, \textsc{Tree}, and \textsc{Graph}) under unified prompt budgets and identical model backends.
+    \item \textbf{Comprehensive Multi-Dimensional Telemetry:} We formulate an evaluation suite spanning objective task success, deterministic Constraint Satisfaction Rates (CSR), decoupled prompt/completion token usage, financial API cost modeling, and automated runtime failure tracking (covering rate limits, timeouts, schema violations, and loop traps).
+    \item \textbf{Standardized Benchmark Dataset with Anti-Leakage:} We introduce a suite of 7 multi-step technical benchmark tasks spanning planning, constraint balancing, information synthesis, reasoning, decision making, incident response, and algorithmic coding, with strict evaluator ground-truth isolation.
+    \item \textbf{Extensive Empirical Profiling:} We report findings across 175 live cloud executions (spanning Google Gemini 3.1 Flash-Lite, Cohere Command, and Groq Llama-3.3-70B) alongside a zero-cost deterministic offline mock mode, quantifying the precise Pareto frontiers of multi-agent orchestration.
+\end{itemize}
+
+The remainder of this paper is organized as follows. Section~\ref{sec:related_work} surveys foundational and contemporary literature. Section~\ref{sec:problem_statement} formalizes the research problem and hypotheses. Section~\ref{sec:framework} details the proposed system architecture. Section~\ref{sec:topologies} formalizes the five canonical topologies. Section~\ref{sec:metrics} defines the mathematical metric formulations. Section~\ref{sec:methodology} and Section~\ref{sec:implementation} describe experimental methodology and software design. Section~\ref{sec:results} presents empirical findings. Section~\ref{sec:discussion} discusses architectural trade-offs, followed by threats to validity (Section~\ref{sec:threats_to_validity}), limitations (Section~\ref{sec:limitations}), and conclusions (Section~\ref{sec:conclusion}).
+

@@ -1,0 +1,31 @@
+\section{Discussion}
+\label{sec:discussion}
+
+The empirical findings from MultiAgentTopologyEval provide critical architectural insights for engineering reliable multi-agent LLM systems in production environments.
+
+\subsection{The Multi-Agent Orchestration Trade-Off}
+A dominant assumption in early agent literature is that decomposing work across multiple LLM personas inherently yields superior accuracy. Our results challenge this assumption by demonstrating that multi-agent delegation is not universally advantageous. 
+
+When a task's context, rules, and constraints can comfortably fit within the attention window of a modern frontier model, an isolated \textsc{Single} agent baseline frequently achieves higher constraint adherence at a fraction of the cost ($1/15^{\text{th}}$) and latency ($1/7^{\text{th}}$). Multi-agent systems introduce an \textit{information attenuation effect}: each intermediate serialization step risks dropping subtle prompt constraints unless explicit, redundant constraint re-injection protocols are enforced.
+
+\subsection{Architectural Trade-Off Profiles}
+Each evaluated topology presents distinct operational trade-offs, summarized in Table~\ref{tab:topology_specs}:
+
+\begin{table*}[t]
+\centering
+\caption{Systematic Architectural Profile and Trade-off Frontier of Evaluated Topologies}
+\label{tab:topology_specs}
+\begin{tabular}{@{}lp{3.0cm}p{4.2cm}p{4.2cm}p{3.8cm}@{}}
+\hline
+\textbf{Topology} & \textbf{Coordination Style} & \textbf{Primary Advantage} & \textbf{Critical Limitation} & \textbf{Optimal Production Use-Case} \\ \hline
+\textsc{Single} & Isolated single turn & Zero communication overhead; lowest latency & No peer verification; single point of failure & Low-latency queries; atomic API functions \\
+\textsc{Chain}  & Linear SOP pipeline & Clear sequential stages; predictable flow & Cascading error propagation; context omission & Document translation; step-by-step formatting \\
+\textsc{Star}   & Hub-and-spoke delegation & Strong centralized oversight; parallel tasks & Coordinator context and token bottleneck & Enterprise workflows with strict manager role \\
+\textsc{Tree}   & Multi-tier hierarchy & Scalable decomposition; localized context & Deep tree latency; aggregation complexity & Large-scale software engineering projects \\
+\textsc{Graph}  & Peer-to-peer mesh & Maximum flexibility; multi-agent debate & Highest token expenditure; circular loop risks & Open-ended scientific research; policy consensus \\ \hline
+\end{tabular}
+\end{table*}
+
+\subsection{Operational Guardrails in Production Engineering}
+Our findings underscore that deploying LLM multi-agent systems requires robust operational guardrails. In production settings, high-frequency inter-agent chatter rapidly triggers provider concurrency throttles (HTTP 429 status codes) and request timeouts. Implementing pre-flight dry-run estimators, strict iteration caps ($K_{\text{iter}} \le 5$), and automated JSON schema validators is essential to prevent runaway cloud expenditures and non-terminating communication loops.
+

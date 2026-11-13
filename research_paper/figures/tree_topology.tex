@@ -1,0 +1,37 @@
+\begin{tikzpicture}[
+    node distance=0.8cm and 0.6cm,
+    auto,
+    root/.style={rectangle, draw=blue!90!black, fill=blue!15, thick, rounded corners=3pt, minimum width=2.2cm, minimum height=0.65cm, align=center, font=\scriptsize\bfseries},
+    lead/.style={rectangle, draw=cyan!80!black, fill=cyan!12, thick, rounded corners=3pt, minimum width=2.0cm, minimum height=0.6cm, align=center, font=\tiny\bfseries},
+    leaf/.style={rectangle, draw=teal!80!black, fill=teal!10, thick, rounded corners=3pt, minimum width=1.9cm, minimum height=0.55cm, align=center, font=\tiny\bfseries},
+    sink/.style={rectangle, draw=purple!80!black, fill=purple!10, thick, rounded corners=3pt, minimum width=2.2cm, minimum height=0.65cm, align=center, font=\scriptsize\bfseries},
+    arrow/.style={-{Stealth[length=1.8mm]}, thick, draw=blue!70!black},
+    upward/.style={-{Stealth[length=1.8mm]}, thick, dashed, draw=purple!70!black}
+]
+    % Tier 1: Root
+    \node[root] (root) {Root Coordinator};
+
+    % Tier 2: Leads
+    \node[lead, below left=0.7cm and 0.5cm of root] (rlead) {Research Lead};
+    \node[lead, below right=0.7cm and 0.5cm of root] (alead) {Analysis Lead};
+
+    % Tier 3: Leaf Workers
+    \node[leaf, below=0.6cm of rlead] (rwork) {Research Worker};
+    \node[leaf, below=0.6cm of alead] (cwork) {Critic Worker};
+
+    % Tier 4: Aggregation Sink
+    \node[sink, below=1.9cm of root] (final) {Tree Finalizer (Sink)};
+
+    % Top-down delegation
+    \draw[arrow] (root.south) -- (rlead.north);
+    \draw[arrow] (root.south) -- (alead.north);
+    \draw[arrow] (rlead.south) -- (rwork.north);
+    \draw[arrow] (alead.south) -- (cwork.north);
+
+    % Bottom-up aggregation
+    \draw[upward] (rwork.south) -- (final.north west);
+    \draw[upward] (cwork.south) -- (final.north east);
+    \draw[upward] (rlead.south east) -- (final.north);
+    \draw[upward] (alead.south west) -- (final.north);
+\end{tikzpicture}
+

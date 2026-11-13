@@ -1,0 +1,23 @@
+\begin{tikzpicture}[
+    node distance=0.6cm and 0.8cm,
+    auto,
+    agent/.style={rectangle, draw=blue!80!black, fill=blue!8, thick, rounded corners=3pt, minimum width=2.2cm, minimum height=0.7cm, align=center, font=\scriptsize\bfseries},
+    io/.style={rectangle, draw=gray!70, fill=gray!10, rounded corners=2pt, minimum width=1.8cm, minimum height=0.55cm, align=center, font=\tiny},
+    arrow/.style={-{Stealth[length=2.0mm]}, thick, draw=blue!70!black}
+]
+    \node[io] (in) {Input $\langle p, \mathcal{C} \rangle$};
+    \node[agent, below=0.5cm of in] (p) {Planner ($a_1$)};
+    \node[agent, below=0.5cm of p] (r) {Researcher ($a_2$)};
+    \node[agent, below=0.5cm of r] (a) {Analyst ($a_3$)};
+    \node[agent, below=0.5cm of a] (c) {Critic ($a_4$)};
+    \node[agent, below=0.5cm of c] (f) {Finalizer ($a_5$)};
+    \node[io, below=0.5cm of f] (out) {Final Solution $\hat{y}$};
+
+    \draw[arrow] (in) -- (p);
+    \draw[arrow] (p) -- node[right, font=\tiny] {$m_1$} (r);
+    \draw[arrow] (r) -- node[right, font=\tiny] {$m_2$} (a);
+    \draw[arrow] (a) -- node[right, font=\tiny] {$m_3$} (c);
+    \draw[arrow] (c) -- node[right, font=\tiny] {$m_4$} (f);
+    \draw[arrow] (f) -- (out);
+\end{tikzpicture}
+

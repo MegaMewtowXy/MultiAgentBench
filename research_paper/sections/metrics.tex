@@ -1,0 +1,82 @@
+\section{Evaluation Metrics and Mathematical Formulation}
+\label{sec:metrics}
+
+MultiAgentTopologyEval formalizes a multi-dimensional metric registry spanning objective task performance, constraint compliance, resource efficiency, latency, and operational failure taxonomies.
+
+\subsection{Objective Task Performance Metrics}
+\textbf{Constraint Satisfaction Rate (CSR):} For a task containing explicit constraints $\mathcal{C} = \{c_1, c_2, \dots, c_k\}$, $CSR \in [0, 1]$ measures the fraction of verifiable constraints satisfied in the final response $\hat{y}$:
+\begin{equation}
+CSR = \frac{1}{|\mathcal{C}|} \sum_{i=1}^{|\mathcal{C}|} \mathbb{I}\left(\text{verify}(c_i, \hat{y}) = \text{True}\right)
+\end{equation}
+where $\mathbb{I}(\cdot)$ is the indicator function and $\text{verify}(\cdot)$ executes deterministic regex pattern matching, numeric range checking, or JSON schema parsing against explicit task criteria.
+
+\textbf{Property Match Rate (PMR):} Measures the semantic alignment of output $\hat{y}$ against expected domain property keywords $\mathcal{P} = \{p_1, \dots, p_m\}$:
+\begin{equation}
+PMR = \frac{1}{|\mathcal{P}|} \sum_{j=1}^{|\mathcal{P}|} \mathbb{I}\left(p_j \in \hat{y}\right)
+\end{equation}
+
+\textbf{Composite Task Score ($S$):} In accordance with the system specification (\texttt{docs/metrics.md}), the overall objective achievement score $S \in [0, 1]$ is computed as a weighted combination prioritizing strict constraint fulfillment:
+\begin{equation}
+S = (w_{\text{const}} \cdot CSR) + (w_{\text{prop}} \cdot PMR)
+\end{equation}
+where $w_{\text{const}} = 0.6$ and $w_{\text{prop}} = 0.4$.
+
+\textbf{Binary Task Success ($TS$):} A run is classified as successful if and only if it satisfies the minimum achievement threshold without execution abortion:
+\begin{equation}
+TS = \mathbb{I}(S \ge 0.50 \;\land\; \text{ExecutionSuccess} = \text{True})
+\end{equation}
+
+\textbf{Quality Score ($QS$):} Scales the composite score onto an intuitive academic grading scale:
+\begin{equation}
+QS = S \times 10.0 \quad (QS \in [0.0, 10.0])
+\end{equation}
+
+\subsection{Resource Consumption and Financial Cost}
+\textbf{Decoupled Token Telemetry:} Unlike benchmarks that report aggregate token counts, MultiAgentTopologyEval separately measures prompt tokens $T_{\text{prompt}}$ and generated completion tokens $T_{\text{completion}}$ across every individual agent $a \in \mathcal{V}$:
+\begin{equation}
+T_{\text{prompt}} = \sum_{a \in \mathcal{V}} T_{\text{in}}(a), \quad T_{\text{comp}} = \sum_{a \in \mathcal{V}} T_{\text{out}}(a)
+\end{equation}
+\begin{equation}
+T_{\text{total}} = T_{\text{prompt}} + T_{\text{comp}}
+\end{equation}
+
+\textbf{Financial API Cost Modeling ($\mathcal{C}_{\text{USD}}$):} Accurately estimates monetary expenditure accrued per task execution using model-specific input/output token pricing:
+\begin{equation}
+\mathcal{C}_{\text{USD}} = \sum_{a \in \mathcal{V}} \left( \frac{T_{\text{in}}(a)}{10^6} \cdot P_{\text{in}} + \frac{T_{\text{out}}(a)}{10^6} \cdot P_{\text{out}} \right)
+\end{equation}
+where $P_{\text{in}}$ and $P_{\text{out}}$ represent the provider pricing in USD per million tokens (e.g., Gemini 3.1 Flash-Lite: $\$0.075$ / $\$0.30$ per $10^6$ tokens; Cohere Command: $\$0.15$ / $\$0.60$ per $10^6$ tokens).
+
+\subsection{Execution Latency and Turn Efficiency}
+\textbf{Wall-Clock Execution Latency ($\mathcal{L}$):} Measures total elapsed execution time from initial prompt submission $t_{\text{start}}$ to final response synthesis $t_{\text{end}}$:
+\begin{equation}
+\mathcal{L} = t_{\text{end}} - t_{\text{start}}
+\end{equation}
+In multi-agent topologies, $\mathcal{L}$ incorporates API round-trip network transit, provider queue waiting time, and LLM token generation latency across all sequential dependency stages.
+
+\subsection{Reliability and Failure Taxonomy}
+\textbf{Failure Rate ($FR$):} Measures system-level unreliability across a batch of $N$ evaluations:
+\begin{equation}
+FR = \frac{1}{N} \sum_{k=1}^N \mathbb{I}(TS_k = \text{False})
+\end{equation}
+
+\textbf{Failure Classification:} When an evaluation fails ($TS = \text{False}$), the framework categorizes the failure mode $\mathcal{F}$ into mutually exclusive classifications:
+\begin{itemize}
+    \item \textbf{Constraint Violation:} The final output failed to satisfy explicit numerical, structural, or SLA limits ($CSR < 0.5$).
+    \item \textbf{Reasoning Failure:} Factual hallucinations, circular logic, or invalid domain recommendations.
+    \item \textbf{Rate Limit Error (HTTP 429):} API provider concurrency or requests-per-minute quota exceeded.
+    \item \textbf{Provider Timeout:} External inference API failed to respond within configured timeout limit ($\tau_{\text{timeout}} = 30\,$s).
+    \item \textbf{Schema Parsing Exception:} Model failed to produce valid JSON or conform to expected output schemas.
+    \item \textbf{Agent Loop Trap:} Execution aborted by guardrails due to circular repetitive dialogue ($K_{\text{iter}} > 5$).
+\end{itemize}
+
+\subsection{Statistical Effect Size Formulation}
+To rigorously quantify the performance shift of multi-agent topologies relative to the isolated \textsc{Single} baseline, the framework calculates Cohen's $d$ standardized effect size:
+\begin{equation}
+d = \frac{\bar{S}_{\text{arch}} - \bar{S}_{\text{single}}}{s_{\text{pooled}}}
+\end{equation}
+where $s_{\text{pooled}}$ is the pooled standard deviation across matched sample pairs:
+\begin{equation}
+s_{\text{pooled}} = \sqrt{\frac{(n_{\text{arch}} - 1)s_{\text{arch}}^2 + (n_{\text{single}} - 1)s_{\text{single}}^2}{n_{\text{arch}} + n_{\text{single}} - 2}}
+\end{equation}
+Following standard conventions, $|d| \ge 0.2$ denotes a small effect, $|d| \ge 0.5$ a medium effect, and $|d| \ge 0.8$ a large effect.
+

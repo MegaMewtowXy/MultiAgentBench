@@ -1,0 +1,45 @@
+\section{Implementation Details}
+\label{sec:implementation}
+
+MultiAgentTopologyEval is implemented in Python 3.13 using object-oriented, dataclass-driven design principles. The framework is structured into decoupled packages, ensuring modularity, extensibility, and maintainability.
+
+\subsection{Evaluation Pipeline Architecture}
+Figure~\ref{fig:evaluation_pipeline} illustrates the internal data flow of the evaluation pipeline. When an architecture finishes executing a task, it outputs an \texttt{ArchitectureResult} dataclass containing the final synthesized text $\hat{y}$, execution duration, call count, token totals, and the chronological list of \texttt{AgentMessage} objects exchanged between nodes.
+
+\begin{figure}[h]
+\centering
+\input{figures/evaluation_pipeline.tex}
+\caption{Detailed Evaluation Pipeline: Illustrating task sanitization, agent execution, and the hybrid evaluation engine combining deterministic constraint verification with optional LLM judge assessment.}
+\label{fig:evaluation_pipeline}
+\end{figure}
+
+The \texttt{HybridEvaluator} ingests this result alongside the quarantined \texttt{TaskDefinition}:
+\begin{enumerate}
+    \item \textbf{Deterministic Verification:} Regular expression engines extract numerical metrics, latency bounds, availability percentages, and budget estimates from $\hat{y}$. Each constraint $c_i \in \mathcal{C}$ is evaluated against ground-truth mathematical thresholds.
+    \item \textbf{Property Verification:} The text is parsed for mandatory architectural keywords and component terms specified in $\mathcal{P}_{\text{expected}}$.
+    \item \textbf{Metric Consolidation:} Computes $CSR$, $PMR$, and the composite Task Score $S$.
+    \item \textbf{Telemetry Logging:} The complete execution trajectory, including per-agent states and inter-agent communication edges, is serialized into detailed JSON records and summary CSV tables.
+\end{enumerate}
+
+\subsection{Interactive Research Dashboard}
+In addition to the headless command-line interface (\texttt{scripts/run\_experiments.py}), the framework includes an interactive web research dashboard implemented in Streamlit (\texttt{main.py}). The dashboard provides seven specialized modules:
+\begin{enumerate}
+    \item \textit{Executive Dashboard:} Displays aggregate KPI summaries, radar comparison charts, and best-performing topology badges.
+    \item \textit{Experiment Runner:} Enables interactive matrix execution with pre-flight dry-run cost previews and progress tracking.
+    \item \textit{Architecture Comparison:} Interactive Plotly charts comparing Quality, Latency, Total API Calls, and Token Consumption.
+    \item \textit{Task Deep-Dive:} Allows researchers to inspect individual inter-agent messages, intermediate plans, and final answers per task.
+    \item \textit{Topology Visualizer:} Renders dynamic directed network graphs ($G=(\mathcal{V}, \mathcal{E})$) using Graphviz, illustrating active message channels.
+    \item \textit{Empirical Results Analysis:} Generates neutral research observations, statistical tables, and effect size distributions.
+    \item \textit{Seminar Demonstration Suite:} A side-by-side comparative demo box designed for live technical presentations.
+\end{enumerate}
+
+\subsection{Quality Assurance and Test Coverage}
+The framework includes an automated test suite implemented in \texttt{pytest} spanning 31 unit and integration test cases across four test modules:
+\begin{itemize}
+    \item \texttt{test\_architectures.py} (5 tests): Verifies execution integrity, turn-taking, and message logs across all five topologies.
+    \item \texttt{test\_audit\_enhancements.py} (20 tests): Validates anti-leakage isolation, credential redaction, loop detection, statistical analyzers, and failure classification.
+    \item \texttt{test\_experiments.py} (1 test): Verifies matrix execution orchestration and CSV/JSON output serialization.
+    \item \texttt{test\_foundation.py} (5 tests): Verifies task loader integrity, schema validation, and mock provider determinism.
+\end{itemize}
+The test suite executes 100\% offline using the \texttt{MockProvider}, achieving full pass status without external network dependencies.
+

@@ -1,0 +1,50 @@
+\section{Related Work}
+\label{sec:related_work}
+
+\subsection{Foundations of LLM-Based Autonomous Agents}
+The paradigm shift from static pattern completion to goal-directed autonomous agents is grounded in Transformer architectures~\cite{Vaswani2017Attention}, pre-training and fine-tuning transfer learning paradigms~\cite{Devlin2019BERT,Raffel2020Exploring,Brown2020Language,Chowdhery2023PaLM}, and empirical compute scaling laws~\cite{Kaplan2020Scaling,Hoffmann2022Training}. When foundation models scale past critical thresholds, they exhibit emergent reasoning abilities~\cite{Wei2022Emergent} that enable complex instruction adherence. 
+
+To formalize autonomous agency, cognitive architectures for language agents (such as CoALA~\cite{Sumers2024Cognitive} and recent comprehensive surveys~\cite{Wang2024Survey,Xi2025Rise}) decompose an LLM agent into four principal structural modules:
+(1) a \textit{Reasoning Core (Brain)} for goal parsing and deliberation;
+(2) a \textit{Perception Module} for ingesting environmental feedback;
+(3) a \textit{Dual-Tier Memory System} spanning short-term working context buffers and long-term external stores~\cite{Park2023Generative}; and
+(4) an \textit{Action Space} connecting the agent to external tools and APIs~\cite{Yao2023ReAct,Schick2023Toolformer,Patil2024Gorilla}.
+Representative architectures, such as HuggingGPT~\cite{Shen2023HuggingGPT} and Voyager~\cite{Wang2024Voyager}, demonstrated early operational paradigms for closed-loop execution by recursively decomposing high-level user tasks into prioritized action queues grounded in environmental observations.
+
+\subsection{Deliberative Reasoning and Multi-Agent Systems}
+Single-agent deliberative reasoning has been extensively augmented through prompting workflows. Chain-of-Thought (CoT) prompting~\cite{Wei2022Chain,Kojima2022Large} and programmatic reasoning (PAL~\cite{Gao2023PAL}, PoT~\cite{Chen2023Program}) elicit intermediate computation steps. Non-linear thought search methods, including Tree of Thoughts (ToT)~\cite{Yao2023Tree} and Graph of Thoughts (GoT)~\cite{Besta2024Graph}, enable search over branching states. Post-execution self-correction frameworks, such as Reflexion~\cite{Shinn2023Reflexion}, Self-Refine~\cite{Madaan2023SelfRefine}, and CRITIC~\cite{Gou2024CRITIC}, introduce verbal critique loops conditioned on tool feedback.
+
+To address the limitations of monolithic agents (such as context saturation and inability to parallelize specialization), Multi-Agent Systems (MAS) distribute tasks across specialized personas~\cite{Wu2024AutoGen,Li2023CAMEL}. MetaGPT~\cite{Hong2024MetaGPT} maps software engineering Standard Operating Procedures (SOPs) onto sequential agent pipelines. AgentVerse~\cite{Chen2024AgentVerse} explores dynamic multi-agent group assembly and discussion, while ChatDev~\cite{Qian2024Communicative} demonstrates communicative agent dialogues for multi-stage software synthesis. Furthermore, multi-agent debate protocols~\cite{Du2024Improving,Yin2023Exchange} demonstrate that collective consensus through peer dialogue significantly reduces individual hallucination rates.
+
+\subsection{Benchmarking LLM Agents and Positioning vs. MultiAgentBench}
+As agents evolved toward interactive multi-step systems, traditional static NLP benchmarks proved inadequate~\cite{Chang2024Survey}. Early single-agent benchmarks targeted isolated digital environments: AgentBench~\cite{Liu2024AgentBench} evaluated OS shells, web navigation, and databases; SWE-bench~\cite{Jimenez2024SWEbench} benchmarked Python issue resolution; WebArena~\cite{Zhou2024WebArena} evaluated e-commerce and CMS interactions; and OSWorld~\cite{Xie2024OSWorld} assessed desktop OS control.
+
+In the multi-agent domain, Zhu et al.~\cite{Zhu2025MultiAgentBench} recently established \textit{MultiAgentBench} (powered by the MARBLE coordination engine), representing a major milestone by evaluating multi-agent systems across collaborative (Research, Coding, Database, Minecraft) and competitive (Werewolf, Bargaining) environments using milestone-based Key Performance Indicators (KPIs) and coordination scores.
+
+\textbf{Positioning of MultiAgentTopologyEval:} MultiAgentTopologyEval does not replace or claim superiority over MultiAgentBench; rather, it addresses complementary operational dimensions that are critical for engineering deployment:
+\begin{itemize}
+    \item \textit{Topology Isolation:} MultiAgentBench benchmarked multi-agent scenarios primarily within environment-heavy game simulators. In contrast, MultiAgentTopologyEval strictly isolates interaction topology (\textsc{Single}, \textsc{Chain}, \textsc{Star}, \textsc{Tree}, \textsc{Graph}) across a standardized suite of technical tasks under unified prompt budgets.
+    \item \textit{Fine-Grained Telemetry:} While MultiAgentBench tracks macro milestone completion and behavioral interaction quality, MultiAgentTopologyEval systematically captures decoupled prompt versus completion token consumption, financial API cost estimation, step-level wall-clock latency, and deterministic Constraint Satisfaction Rates (CSR).
+    \item \textit{Operational Fault Telemetry:} We instrument explicit detection and categorization of systems-level failures, including HTTP 429 rate-limit errors, request timeouts, malformed JSON schema exceptions, and non-terminating agent loops.
+    \item \textit{Lightweight and Deterministic Harness:} We replace heavy simulation engines with an accessible, CPU-compatible benchmark testbed featuring a 100\% reproducible, zero-cost offline mock engine.
+\end{itemize}
+A systematic synthesis comparing representative benchmark suites across evaluation dimensions is provided in Table~\ref{tab:benchmark_comparison}.
+
+\begin{table*}[t]
+\centering
+\caption{Systematic Synthesis of Evaluation Dimensions Across Representative LLM Agent Benchmarks}
+\label{tab:benchmark_comparison}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{@{}p{3.0cm}p{2.7cm}p{2.4cm}p{1.9cm}p{2.2cm}p{2.4cm}p{1.9cm}@{}}
+\hline
+\textbf{Benchmark} & \textbf{Task Scope} & \textbf{Token/Cost Tracking} & \textbf{Latency Profiling} & \textbf{Constraint Validation} & \textbf{Failure Telemetry} & \textbf{Topology Isolation} \\ \hline
+AgentBench~\cite{Liu2024AgentBench} & Single-Agent (OS, Web, DB) & Coarse / Low & Low & Low & Low & None \\
+SWE-bench~\cite{Jimenez2024SWEbench} & Single-Agent (Software Issues) & Coarse / Low & Low & Medium (Unit Tests) & Low & None \\
+WebArena~\cite{Zhou2024WebArena} & Single-Agent (Web Navigation) & Coarse / Low & Low & Medium (URL/State) & Low & None \\
+AgentVerse~\cite{Chen2024AgentVerse} & Multi-Agent (Discussion/Debate) & Medium & Low & Low & Medium (Dialogue loops) & Partial (Group focus) \\
+MultiAgentBench~\cite{Zhu2025MultiAgentBench} & Multi-Agent (Collab. \& Compet.) & Medium & Medium & Medium (Milestone KPIs) & Partial (MAST profiling) & Yes (Simulation-bound) \\ \hline
+\textbf{MultiAgent\-TopologyEval} & \textbf{Multi-Agent (5 Canonical Topologies)} & \textbf{Decoupled (Prompt/Comp./USD)} & \textbf{Step-Level Latency} & \textbf{Strict Deterministic CSR} & \textbf{Comprehensive (API, Schema, Loop)} & \textbf{Controlled \& Isolated} \\ \hline
+\end{tabular}
+\end{table*}
+

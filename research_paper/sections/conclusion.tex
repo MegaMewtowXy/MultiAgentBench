@@ -1,0 +1,17 @@
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+In this paper, we presented \textbf{MultiAgentTopologyEval}, a controlled empirical evaluation and operational profiling framework designed to benchmark multi-agent LLM coordination topologies. Rather than evaluating proprietary monolithic architectures or relying on complex game simulation environments, our framework systematically isolates five canonical topologies---\textsc{Single}, \textsc{Chain}, \textsc{Star}, \textsc{Tree}, and \textsc{Graph}---under unified prompt constraints and identical foundation models.
+
+By instrumenting comprehensive, multi-dimensional telemetry spanning task success, deterministic Constraint Satisfaction Rates (CSR), decoupled prompt/completion tokens, financial API expenditure, wall-clock latency, and structured runtime failure classifications, our work provides concrete empirical trade-offs governing multi-agent orchestration. Empirical results across 175 live multi-provider evaluations demonstrate that while multi-agent architectures offer peer verification benefits, they incur severe latency ($6.7\times$ to $7.5\times$) and token ($10.3\times$ to $15.3\times$) amplification penalties compared to an isolated \textsc{Single} agent baseline. Furthermore, we demonstrated that linear pipeline (\textsc{Chain}) architectures exhibit high vulnerability to cascading constraint omissions, whereas centralized (\textsc{Star}) and hierarchical (\textsc{Tree}) structures maintain constraint integrity by localizing validation to dedicated specialist nodes.
+
+\subsection{Future Directions}
+Future work will proceed along three principal axes:
+\begin{enumerate}
+    \item \textbf{Dynamic and Adaptive Topologies:} Extending the coordination engine to support real-time adaptive topology restructuring, wherein the system dynamically transitions from a single agent to a star or mesh topology only when task uncertainty or intermediate validation errors exceed critical thresholds.
+    \item \textbf{Heterogeneous Agent Swarms:} Benchmarking mixed-model architectures pairing frontier reasoning models (e.g., GPT-4o, Claude 3.5 Sonnet) as coordinators with lightweight, local Small Language Models (e.g., Llama-3-8B via Ollama) as leaf workers to optimize the performance-to-cost frontier.
+    \item \textbf{Continuous and Multi-Modal Benchmarks:} Expanding the task suite from discrete software architecture tasks to continuous physical reasoning and multimodal computer-use environments.
+\end{enumerate}
+
+MultiAgentTopologyEval is openly released to provide researchers and students with a lightweight, reproducible testbed for profiling the next generation of LLM multi-agent systems.
+

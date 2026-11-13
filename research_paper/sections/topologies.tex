@@ -1,0 +1,79 @@
+\section{Multi-Agent Topology Architectures}
+\label{sec:topologies}
+
+MultiAgentTopologyEval formalizes five canonical coordination topologies. Each topology is implemented as an isolated class inheriting from \texttt{BaseArchitecture}, ensuring identical input prompts and unified execution telemetry.
+
+\subsection{\textsc{Single} Architecture (Baseline Control)}
+The \textsc{Single} topology serves as the minimal reference baseline control. As illustrated in Figure~\ref{fig:single_topology}, a solitary agent $a_{\text{single}}$ processes the task prompt $p$ and constraints $\mathcal{C}$ in an isolated turn:
+\begin{equation}
+\hat{y} = \mathcal{M}(p, \mathcal{C}; \theta)
+\end{equation}
+While computationally lean and free of inter-agent message serialization overhead, the single-agent baseline lacks peer review mechanisms and is prone to uncorrected hallucination and constraint omissions on complex multi-step reasoning tasks.
+
+\begin{figure}[h]
+\centering
+\input{figures/single_topology.tex}
+\caption{\textsc{Single} Architecture: Baseline execution where a single agent processes the entire task prompt in isolation.}
+\label{fig:single_topology}
+\end{figure}
+
+\subsection{\textsc{Chain} Architecture (Linear Pipeline)}
+The \textsc{Chain} topology organizes specialized agents into a sequential pipeline ($A_1 \rightarrow A_2 \rightarrow \dots \rightarrow A_n$) reflecting industrial Standard Operating Procedures (SOPs)~\cite{Hong2024MetaGPT}. As shown in Figure~\ref{fig:chain_topology}, execution progresses linearly:
+\begin{equation}
+m_{i} = a_i\left(p, m_{i-1}; \mathcal{M}\right), \quad \forall i \in \{1, \dots, n\}
+\end{equation}
+In our implementation, the pipeline executes sequentially:
+\begin{center}
+\textbf{Planner} $\longrightarrow$ \textbf{Researcher} $\longrightarrow$ \textbf{Analyst} $\longrightarrow$ \textbf{Critic} $\longrightarrow$ \textbf{Finalizer}
+\end{center}
+The primary advantage of \textsc{Chain} is progressive refinement. However, linear pipelines lack backward feedback loops; an uncorrected error or omitted constraint in an upstream stage propagates downstream, causing cascading failure.
+
+\begin{figure}[h]
+\centering
+\input{figures/chain_topology.tex}
+\caption{\textsc{Chain} Architecture: Sequential linear pipeline with step-by-step intermediate handoff across five specialized roles.}
+\label{fig:chain_topology}
+\end{figure}
+
+\subsection{\textsc{Star} Architecture (Centralized Hub-and-Spoke)}
+The \textsc{Star} topology deploys a centralized Coordinator/Manager node ($a_c$) surrounded by specialized satellite workers ($a_1, \dots, a_k$), as illustrated in Figure~\ref{fig:star_topology}. The coordinator decomposes the user objective, delegates targeted sub-prompts to individual worker nodes, gathers their parallel outputs, and routes them to a Finalizer sink:
+\begin{equation}
+m_{\text{work}, i} = a_i\left(m_{\text{coord}, i}; \mathcal{M}\right), \quad \hat{y} = a_{\text{final}}\left(\bigcup_{i=1}^k m_{\text{work}, i}; \mathcal{M}\right)
+\end{equation}
+Communication is restricted to hub-to-spoke channels ($a_c \leftrightarrow a_i$), eliminating uncoordinated worker chatter. While Star structures provide tight task allocation, the central coordinator node can become a context-window bottleneck as all intermediate outputs converge on it.
+
+\begin{figure}[h]
+\centering
+\input{figures/star_topology.tex}
+\caption{\textsc{Star} Architecture: Central coordinator delegating specialized sub-tasks in parallel to worker nodes with centralized aggregation.}
+\label{fig:star_topology}
+\end{figure}
+
+\subsection{\textsc{Tree} Architecture (Multi-Tier Hierarchical)}
+The \textsc{Tree} topology structures agents into a multi-tier organizational hierarchy, depicted in Figure~\ref{fig:tree_topology}. A Root Coordinator delegates high-level sub-problems to intermediate branch leads (\textit{Research Lead} and \textit{Analysis Lead}), which in turn supervise leaf execution agents (\textit{Research Worker} and \textit{Critic Worker}):
+\begin{equation}
+\mathcal{V}_{\text{tree}} = \{a_{\text{root}}\} \cup \mathcal{V}_{\text{leads}} \cup \mathcal{V}_{\text{workers}} \cup \{a_{\text{final}}\}
+\end{equation}
+Sub-solutions flow up the hierarchy through bottom-up aggregation. This architecture prevents context saturation by distributing domain context locally within branches, but introduces multi-tier latency overhead.
+
+\begin{figure}[h]
+\centering
+\input{figures/tree_topology.tex}
+\caption{\textsc{Tree} Architecture: Multi-tier hierarchical decomposition with root coordinator, branch leads, leaf workers, and bottom-up aggregation.}
+\label{fig:tree_topology}
+\end{figure}
+
+\subsection{\textsc{Graph} Architecture (Configurable Mesh)}
+The \textsc{Graph} topology generalizes communication to an arbitrary directed graph $G = (\mathcal{V}, \mathcal{E})$, shown in Figure~\ref{fig:graph_topology}. Edges $\mathcal{E}$ define explicit permitted messaging routes:
+\begin{equation}
+m_{j} = a_j\left(\bigcup_{(i, j) \in \mathcal{E}} m_{i}; \mathcal{M}\right)
+\end{equation}
+Our default configuration enables the Planner to fan out to Researcher and Analyst nodes, whose outputs converge at the Critic for peer verification, before advancing to the Finalizer. Graph topologies provide maximum routing flexibility and robust consensus formation, but incur elevated token usage.
+
+\begin{figure}[h]
+\centering
+\input{figures/graph_topology.tex}
+\caption{\textsc{Graph} Architecture: Configurable mesh network supporting multi-directional communication and peer verification loops.}
+\label{fig:graph_topology}
+\end{figure}
+

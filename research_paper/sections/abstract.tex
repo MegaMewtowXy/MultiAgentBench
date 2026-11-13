@@ -1,0 +1,12 @@
+\begin{abstract}
+Large Language Model (LLM) agents are increasingly organized into multi-agent systems to solve complex tasks through role specialization and inter-agent collaboration. However, the choice of communication topology---how information flows between agents---remains poorly understood in terms of its holistic trade-offs across task performance, computational cost, execution latency, and runtime reliability. Most existing agent benchmarks evaluate monolithic task completion or simulate complex game environments, leaving the fine-grained operational trade-offs of canonical interaction graphs largely uncharacterized under controlled conditions. 
+
+In this paper, we introduce \textbf{MultiAgentTopologyEval}, a modular and reproducible empirical evaluation framework designed to systematically isolate and profile the operational behavior of five canonical multi-agent topologies: \textsc{Single}, \textsc{Chain}, \textsc{Star}, \textsc{Tree}, and \textsc{Graph}. Rather than focusing solely on binary success, our framework instruments multi-dimensional telemetry capturing decoupled prompt and completion token usage, real-time financial API cost, step-level latency distributions, deterministic constraint satisfaction rates, and operational failure taxonomies (including API rate-limit stalls, request timeouts, schema parsing exceptions, and non-terminating communication loops). 
+
+We evaluate these architectures across seven diverse reasoning, planning, and synthesis task categories over 175 live cloud executions (spanning Google Gemini, Cohere Command, and Groq Llama-3.3) alongside offline deterministic mock baselines. Our empirical findings demonstrate that while centralized (\textsc{Star}) and hierarchical (\textsc{Tree}) topologies prevent single-point failures, linear pipelines (\textsc{Chain}) suffer from cascading constraint degradation. Furthermore, multi-agent coordination incurs a 6.7$\times$ to 7.5$\times$ latency overhead and up to a 15.3$\times$ token amplification compared to an isolated \textsc{Single} baseline, highlighting the critical necessity of multi-dimensional operational profiling when selecting agent architectures.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Multi-Agent Systems, Large Language Models, Communication Topologies, Empirical Benchmarking, Operational Profiling, Reliability Engineering.
+\end{IEEEkeywords}
+

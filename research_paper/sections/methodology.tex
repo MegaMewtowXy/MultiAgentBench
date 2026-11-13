@@ -1,0 +1,52 @@
+\section{Experimental Methodology}
+\label{sec:methodology}
+
+\subsection{Benchmark Task Suite Composition}
+To evaluate multi-agent reasoning, planning, and constraint adherence across varied operational domains, we construct a curated benchmark suite comprising seven complex task archetypes. As summarized in Table~\ref{tab:benchmark_tasks}, each task is designed to test specific agent capabilities under strict quantitative constraints:
+
+\begin{table*}[t]
+\centering
+\caption{Benchmark Task Suite Composition and Operational Requirements}
+\label{tab:benchmark_tasks}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llp{2.8cm}p{5.2cm}p{3.8cm}@{}}
+\hline
+\textbf{Task ID} & \textbf{Category} & \textbf{Evaluation Focus} & \textbf{Key Constraints \& Operational Bounds} & \textbf{Ground-Truth Verification} \\ \hline
+\texttt{TASK\_PLAN\_001} & Planning & Monolith Migration & 4-quarter phased rollout, Kafka event streaming, zero-downtime rollback & Regex \& phase validation \\
+\texttt{TASK\_CONST\_002} & Constraint Sat. & Cloud Architecture & Latency $< 50\,$ms, 99.99\% availability, monthly budget $\le \$5{,}000$ & Numeric range checking \\
+\texttt{TASK\_SYNTH\_003} & Synthesis & Model Complexity & GNN $\mathcal{O}(V+E)$ spatial efficiency vs. Relational Transformer $\mathcal{O}(N^2)$ & Algorithmic property match \\
+\texttt{TASK\_REASON\_004} & Reasoning & Deadlock Detection & Cycle detection across concurrent financial clearing transactions & Lock-order graph analysis \\
+\texttt{TASK\_DECISION\_005} & Decision Making & Database Selection & HIPAA compliance, 500M records, sub-second full-text medical search & Multi-criteria matrix \\
+\texttt{TASK\_COLLAB\_006} & Collaboration & Incident Response & 15-minute subnet isolation, immutable checksums, breach notifications & Protocol SLA verification \\
+\texttt{TASK\_CODE\_007} & Algorithmic Code & Rate Limiter & Thread-safe in-memory Leaky Bucket in Python, $\mathcal{O}(1)$ time complexity & Deterministic code audit \\ \hline
+\end{tabular}
+\end{table*}
+
+\subsection{Controlled Experimental Variables}
+To scientifically isolate the impact of coordination topology, we implement rigorous experimental controls across all evaluated configurations:
+\begin{itemize}
+    \item \textbf{Independent Variable:} Interaction Topology ($\mathcal{G} \in \{\textsc{Single}, \textsc{Chain}, \textsc{Star}, \textsc{Tree}, \textsc{Graph}\}$).
+    \item \textbf{Controlled Constants:} Identical task prompts $p$ and constraints $\mathcal{C}$; unified base models $\mathcal{M}$; fixed sampling temperature ($T = 0.70$); fixed maximum token generation limit ($M_{\text{tokens}} = 1024$); unified request timeout limit ($\tau = 30\,$s); and identical evaluation scoring logic.
+    \item \textbf{Measured Dependent Variables:} Composite Task Score ($S$), Constraint Satisfaction Rate ($CSR$), prompt tokens ($T_{\text{prompt}}$), completion tokens ($T_{\text{comp}}$), total tokens ($T_{\text{total}}$), financial API cost ($\mathcal{C}_{\text{USD}}$), wall-clock latency ($\mathcal{L}$), and operational failure classification ($\mathcal{F}$).
+\end{itemize}
+
+\subsection{Multi-Provider Evaluation Grid}
+Experiments were executed across three production cloud LLM providers representing diverse architectural scales:
+\begin{enumerate}
+    \item \textbf{Google Gemini 3.1 Flash-Lite:} A high-efficiency cloud foundation model optimized for high-throughput, low-latency agent reasoning.
+    \item \textbf{Cohere Command-A-Plus:} An enterprise model optimized for structured multi-step reasoning, tool integration, and business planning.
+    \item \textbf{Groq Llama-3.3-70B-Versatile:} An open-weights foundation model served via Groq's high-speed LPU (Language Processing Unit) inference infrastructure.
+    \item \textbf{Deterministic Mock Provider:} An offline baseline engine executing deterministic, rule-based responses for 100\% reproducible, zero-cost regression testing.
+\end{enumerate}
+
+\subsection{Experimental Workflow}
+The experimental workflow is illustrated in Figure~\ref{fig:experimental_workflow}. For each experimental trial, the runner initializes the benchmark task, applies anti-leakage sanitization, executes pre-flight dry-run guardrail validation, instantiates the designated topology graph, records inter-agent communication telemetry, computes objective constraint scores via the hybrid evaluator, and persists raw traces to disk.
+
+\begin{figure*}[t]
+\centering
+\input{figures/experimental_workflow.tex}
+\caption{End-to-End Experimental Workflow: From benchmark task ingestion and pre-flight dry-run checks to multi-topology execution, hybrid evaluation, and statistical persistence.}
+\label{fig:experimental_workflow}
+\end{figure*}
+

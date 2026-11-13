@@ -1,0 +1,15 @@
+\begin{tikzpicture}[
+    node distance=1.2cm,
+    auto,
+    agent/.style={rectangle, draw=blue!80!black, fill=blue!10, thick, rounded corners=4pt, minimum width=2.4cm, minimum height=1.0cm, align=center, font=\footnotesize\bfseries},
+    io/.style={rectangle, draw=gray!70, fill=gray!10, rounded corners=2pt, minimum width=1.8cm, minimum height=0.7cm, align=center, font=\scriptsize},
+    arrow/.style={-{Stealth[length=2.5mm]}, thick, draw=blue!70!black}
+]
+    \node[io] (in) {Task Prompt $p$\\Constraints $\mathcal{C}$};
+    \node[agent, right=1.2cm of in] (agent) {Single Agent\\($a_{\text{single}}$)};
+    \node[io, right=1.2cm of agent] (out) {Synthesized\\Answer $\hat{y}$};
+
+    \draw[arrow] (in) -- (agent);
+    \draw[arrow] (agent) -- (out);
+\end{tikzpicture}
+

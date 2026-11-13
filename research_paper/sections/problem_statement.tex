@@ -1,0 +1,37 @@
+\section{Problem Statement and Research Questions}
+\label{sec:problem_statement}
+
+\subsection{Formal Problem Formulation}
+Let a benchmark task $T \in \mathcal{T}$ be defined by a tuple:
+\begin{equation}
+T = \langle p, \mathcal{C}, \mathcal{P}_{\text{expected}}, y^* \rangle
+\end{equation}
+where $p$ represents the user task prompt, $\mathcal{C} = \{c_1, c_2, \dots, c_k\}$ is a set of explicit domain constraints (e.g., latency bounds, availability targets, budget limits, format schemas), $\mathcal{P}_{\text{expected}}$ is a set of expected semantic keyword properties, and $y^*$ is an authoritative reference answer (strictly withheld from agents to prevent test leakage).
+
+Let $\mathcal{A} = \{a_1, a_2, \dots, a_n\}$ denote a set of specialized agent roles (e.g., Planner, Researcher, Analyst, Critic, Finalizer), and let $\mathcal{M}$ represent the underlying foundation language model. A coordination topology is formalized as a directed graph $G = (\mathcal{V}, \mathcal{E})$, where vertices $\mathcal{V} \subseteq \mathcal{A}$ represent active agent nodes and directed edges $(a_i, a_j) \in \mathcal{E}$ designate permitted communication channels through which agent $a_i$ may transmit structured messages to $a_j$.
+
+When an architecture $G$ executes task $T$ using model $\mathcal{M}$, it produces a final textual solution $\hat{y}$ along with an execution trace $\mathcal{X}$. The central problem investigated by MultiAgentTopologyEval is to empirically characterize the mapping:
+\begin{equation}
+\Phi: (G, T, \mathcal{M}) \longrightarrow \langle S, CSR, \mathcal{T}_{\text{tokens}}, \mathcal{C}_{\text{USD}}, \mathcal{L}, \mathcal{F} \rangle
+\end{equation}
+where $S \in [0, 1]$ is the task milestone score, $CSR \in [0, 1]$ is the constraint satisfaction rate, $\mathcal{T}_{\text{tokens}}$ is total token consumption (decoupled into prompt and completion components), $\mathcal{C}_{\text{USD}}$ is the financial API cost, $\mathcal{L}$ is end-to-end wall-clock latency, and $\mathcal{F}$ is the operational failure classification.
+
+\subsection{Research Questions}
+We formulate five core research questions to guide our empirical investigation:
+\begin{itemize}
+    \item \textbf{RQ1 (Coordination Benefit):} Does coordinating multiple specialized agents yield higher task quality and constraint satisfaction compared to an isolated single-agent baseline when evaluated on identical tasks?
+    \item \textbf{RQ2 (Topology Specificity):} Which coordination topology achieves superior performance across distinct problem-solving archetypes (e.g., hierarchical planning vs. linear translation vs. cyclic synthesis)?
+    \item \textbf{RQ3 (Resource and Latency Scaling):} How does resource consumption (prompt tokens, completion tokens, financial cost) and wall-clock execution latency scale across the five canonical topologies?
+    \item \textbf{RQ4 (Failure Propagation and Fault Profiles):} How do different interaction graphs propagate or mitigate upstream agent errors, unhandled exceptions, schema parsing failures, and rate limits?
+    \item \textbf{RQ5 (Pareto Efficiency):} What are the empirical Pareto trade-offs balancing solution quality against operational efficiency, and under what conditions does the multi-agent coordination overhead exceed its performance utility?
+\end{itemize}
+
+\subsection{Research Hypotheses}
+Based on multi-agent communication theory, we establish four testable hypotheses:
+\begin{itemize}
+    \item \textbf{H1 (Overhead Scaling):} Multi-agent topologies will incur a super-linear increase in token usage and wall-clock latency relative to the single-agent baseline due to intermediate conversational handoffs.
+    \item \textbf{H2 (Pipeline Vulnerability):} Linear sequential topologies (\textsc{Chain}) will exhibit higher failure rates on multi-constraint tasks due to uncorrected upstream error propagation along the pipeline.
+    \item \textbf{H3 (Hierarchical Resilience):} Hierarchical (\textsc{Tree}) and centralized (\textsc{Star}) topologies will demonstrate higher constraint satisfaction on structured planning tasks by localizing validation to dedicated reviewer and aggregation nodes.
+    \item \textbf{H4 (Baseline Efficiency):} The isolated \textsc{Single} baseline will dominate on straightforward tasks where communication overhead yields diminishing returns.
+\end{itemize}
+

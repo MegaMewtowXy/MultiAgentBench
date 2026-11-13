@@ -1,0 +1,20 @@
+\begin{tikzpicture}[
+    node distance=0.8cm and 1.0cm,
+    auto,
+    gnode/.style={rectangle, draw=blue!80!black, fill=blue!10, thick, rounded corners=3pt, minimum width=2.1cm, minimum height=0.65cm, align=center, font=\scriptsize\bfseries},
+    sink/.style={rectangle, draw=purple!80!black, fill=purple!10, thick, rounded corners=3pt, minimum width=2.1cm, minimum height=0.65cm, align=center, font=\scriptsize\bfseries},
+    arrow/.style={-{Stealth[length=2.0mm]}, thick, draw=blue!70!black}
+]
+    \node[gnode] (planner) {Planner ($v_1$)};
+    \node[gnode, below left=0.7cm and 0.4cm of planner] (res) {Researcher ($v_2$)};
+    \node[gnode, below right=0.7cm and 0.4cm of planner] (ana) {Analyst ($v_3$)};
+    \node[gnode, below right=0.7cm and 0.4cm of res] (critic) {Critic ($v_4$)};
+    \node[sink, below=0.6cm of critic] (fin) {Finalizer ($v_5$)};
+
+    % Directed edges based on adjacency matrix
+    \draw[arrow] (planner.south west) -- node[above left, font=\tiny] {$e_{12}$} (res.north);
+    \draw[arrow] (planner.south east) -- node[above right, font=\tiny] {$e_{13}$} (ana.north);
+    \draw[arrow] (res.south east) -- node[below left, font=\tiny] {$e_{24}$} (critic.north west);
+    \draw[arrow] (ana.south west) -- node[below right, font=\tiny] {$e_{34}$} (critic.north east);
+    \draw[arrow] (critic.south) -- node[right, font=\tiny] {$e_{45}$} (fin.north);
+\end{tikzpicture}

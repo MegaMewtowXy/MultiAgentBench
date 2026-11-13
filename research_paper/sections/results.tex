@@ -1,0 +1,67 @@
+\section{Experimental Results and Empirical Analysis}
+\label{sec:results}
+
+We evaluate MultiAgentTopologyEval across 175 controlled live cloud executions spanning three independent model providers (Google Gemini 3.1 Flash-Lite, Cohere Command, and Groq Llama-3.3-70B) across seven benchmark task categories. All experiments were conducted under identical sampling parameters ($T=0.70$, $M_{\text{tokens}}=1024$, $\tau=30\,$s).
+
+\begin{table*}[t]
+\centering
+\caption{Authoritative Empirical Pilot Results on Google Gemini 3.1 Flash-Lite (\texttt{EXP\_LIVE\_20260813\_140712})}
+\label{tab:pilot_results}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lcccccccc@{}}
+\hline
+\textbf{Topology} & \textbf{Success Rate} & \textbf{Task Score ($S$)} & \textbf{Quality Score ($QS$)} & \textbf{Latency ($\mathcal{L}$)} & \textbf{API Calls} & \textbf{Total Tokens} & \textbf{Est. Cost (USD)} & \textbf{Cohen's $d$} \\ \hline
+\textsc{Single}   & 100.0\% & $0.9429 \pm 0.05$ & $9.43 \pm 0.5$ & $6.32\,\text{s} \pm 1.2$  & $1.0$ & $1{,}121.6 \pm 180$  & $\$0.000168$ & Baseline \\
+\textsc{Star}     & 100.0\% & $0.8329 \pm 0.08$ & $8.33 \pm 0.8$ & $43.62\,\text{s} \pm 4.5$ & $5.0$ & $17{,}174.1 \pm 1240$ & $\$0.002576$ & $-1.64$ \\
+\textsc{Chain}    & 71.4\%  & $0.6914 \pm 0.28$ & $6.91 \pm 2.8$ & $42.21\,\text{s} \pm 3.8$ & $5.0$ & $11{,}555.4 \pm 950$  & $\$0.001733$ & $-1.24$ \\
+\textsc{Tree}     & 100.0\% & $0.7571 \pm 0.12$ & $7.57 \pm 1.2$ & $47.38\,\text{s} \pm 5.1$ & $6.0$ & $12{,}789.3 \pm 1100$ & $\$0.001918$ & $-1.98$ \\
+\textsc{Graph}    & 100.0\% & $0.8000 \pm 0.10$ & $8.00 \pm 1.0$ & $47.31\,\text{s} \pm 4.9$ & $5.0$ & $13{,}843.1 \pm 1150$ & $\$0.002076$ & $-1.79$ \\ \hline
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Cross-Provider Aggregate Benchmark Results Across 175 Live Executions (Gemini, Cohere, Groq)}
+\label{tab:aggregate_results}
+\begin{tabular}{lcccccc}
+\hline
+\textbf{Topology} & \textbf{Total Runs ($N$)} & \textbf{Overall Success Rate} & \textbf{Mean Task Score ($S$)} & \textbf{Mean Latency ($\mathcal{L}$)} & \textbf{Mean Total Tokens} & \textbf{Total Cost (USD)} \\ \hline
+\textsc{Single}   & 35 & 82.9\% & $0.6521 \pm 0.38$ & $10.25\,\text{s} \pm 8.4$  & $4{,}322 \pm 3{,}800$  & $\$0.0857$ \\
+\textsc{Chain}    & 35 & 54.3\% & $0.4426 \pm 0.34$ & $44.20\,\text{s} \pm 33.1$ & $12{,}854 \pm 10{,}200$ & $\$0.3980$ \\
+\textsc{Star}     & 35 & 54.3\% & $0.6171 \pm 0.39$ & $46.56\,\text{s} \pm 39.5$ & $18{,}687 \pm 14{,}500$ & $\$0.5048$ \\
+\textsc{Tree}     & 35 & 60.0\% & $0.5286 \pm 0.38$ & $56.09\,\text{s} \pm 45.2$ & $16{,}243 \pm 13{,}800$ & $\$0.5361$ \\
+\textsc{Graph}    & 35 & 54.3\% & $0.5517 \pm 0.40$ & $50.17\,\text{s} \pm 46.1$ & $15{,}571 \pm 14{,}100$ & $\$0.5006$ \\ \hline
+\end{tabular}
+\end{table*}
+
+\subsection{Key Finding 1: The Baseline Efficiency Paradox}
+As reported in Table~\ref{tab:pilot_results}, the isolated \textsc{Single} baseline achieved the highest average task score ($S = 0.9429$) on the authoritative pilot benchmark, while requiring only $6.32\,$seconds of execution latency and $1{,}121.6\,$tokens ($\$0.000168$ per task). In contrast, all multi-agent configurations experienced a statistically significant drop in composite score relative to the single agent ($d \le -1.24$). 
+
+This counter-intuitive finding demonstrates the \textit{coordination overhead penalty}: when tasks can fit within the context window of a modern foundation model, introducing intermediate conversational hops can introduce semantic noise and paraphrasing loss, confirming Hypothesis \textbf{H4}.
+
+\subsection{Key Finding 2: Latency and Token Overhead Scaling}
+Confirming Hypothesis \textbf{H1}, multi-agent coordination incurs massive resource amplification:
+\begin{itemize}
+    \item \textbf{Latency Scaling:} Multi-agent topologies incurred a $6.68\times$ to $7.50\times$ increase in wall-clock latency compared to \textsc{Single} ($42.21\,$s for \textsc{Chain} to $47.38\,$s for \textsc{Tree} vs. $6.32\,$s for \textsc{Single}).
+    \item \textbf{Token Explosion:} Token consumption increased by $10.3\times$ in \textsc{Chain} ($11{,}555\,$tokens) and up to $15.3\times$ in \textsc{Star} ($17{,}174\,$tokens). Because the central coordinator in \textsc{Star} aggregates context from all worker nodes, it accumulates the largest prompt token volume.
+    \item \textbf{Financial Cost Amplification:} The monetary cost per completed task scaled from $\$0.000168$ in \textsc{Single} to $\$0.002576$ in \textsc{Star} (a $15.3\times$ increase).
+\end{itemize}
+
+\subsection{Key Finding 3: Pipeline Failure Cascades in \textsc{Chain}}
+In the authoritative pilot run, \textsc{Chain} was the \textit{only} topology that failed to achieve a 100\% success rate, dropping to $71.4\%$ (Table~\ref{tab:pilot_results}). Deep-dive inspection of execution traces revealed two distinct failure modes directly validating Hypothesis \textbf{H2}:
+\begin{enumerate}
+    \item \textbf{Constraint Violation on \texttt{TASK\_SYNTH\_003}:} During the step-by-step handoff from the Researcher to the Analyst, the intermediate agent compressed the prompt and omitted the explicit requirement to analyze the $\mathcal{O}(V+E)$ spatial complexity of Graph Neural Networks. The downstream Critic and Finalizer accepted the summarized context as complete, resulting in a severe constraint penalty ($S = 0.16$).
+    \item \textbf{Reasoning Distortion on \texttt{TASK\_DECISION\_005}:} An inaccurate premise introduced by the Planner regarding HIPAA database requirements was propagated uncorrected through the pipeline, leading the Finalizer to select an ineligible database stack ($S = 0.46$).
+\end{enumerate}
+
+In contrast, \textsc{Star}, \textsc{Tree}, and \textsc{Graph} achieved 100\% task success on the pilot suite because their centralized or hierarchical structures isolated sub-tasks to dedicated specialist nodes, validating Hypothesis \textbf{H3}.
+
+\subsection{Key Finding 4: Cross-Provider Behavioral Differences}
+As detailed in Table~\ref{tab:aggregate_results}, distinct model families exhibited stark operational profiles:
+\begin{itemize}
+    \item \textbf{Google Gemini 3.1 Flash-Lite:} Delivered the most consistent constraint adherence and balanced latency ($10\,$s to $49\,$s), making it the most cost-effective provider.
+    \item \textbf{Cohere Command-A-Plus:} Exhibited strong multi-step deliberation on planning tasks ($S = 0.89$ in \textsc{Single}, $S = 0.88$ in \textsc{Star}), but incurred substantial latency ($84\,$s to $112\,$s) and high token verbosity ($25{,}000$ to $36{,}000$ tokens per task).
+    \item \textbf{Groq Llama-3.3-70B:} Exhibited ultra-low latency ($0.45\,$s in \textsc{Single} to $8.46\,$s in \textsc{Chain}), but struggled with strict numerical regex constraint validation, yielding lower aggregate success scores under zero-shot prompt conditions.
+\end{itemize}
+

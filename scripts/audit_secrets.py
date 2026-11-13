@@ -3,6 +3,8 @@ import re
 
 patterns = {
     "OpenAI Key (sk-...)": r'sk-[a-zA-Z0-9_\-]{20,}',
+    "Anthropic Key (sk-ant-...)": r'sk-ant-[a-zA-Z0-9_\-]{20,}',
+    "HuggingFace Token (hf_...)": r'hf_[a-zA-Z0-9]{30,}',
     "GitHub Token (ghp/gho)": r'gh[pousr]_[a-zA-Z0-9]{36,}',
     "Google Gemini API Key": r'AIzaSy[a-zA-Z0-9_\-]{33}',
     "Groq API Key (gsk_...)": r'gsk_[a-zA-Z0-9]{40,}',

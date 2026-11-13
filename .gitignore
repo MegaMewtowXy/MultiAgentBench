@@ -36,6 +36,14 @@ logs/
 *.tmp
 *.bak
 
+# LaTeX temporary build files
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
 # IDE, Agent & OS Files
 .vscode/
 .idea/

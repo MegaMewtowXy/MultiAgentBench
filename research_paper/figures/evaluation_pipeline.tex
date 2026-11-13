@@ -1,0 +1,37 @@
+\begin{tikzpicture}[
+    node distance=0.6cm and 0.8cm,
+    auto,
+    proc/.style={rectangle, draw=blue!80!black, fill=blue!8, thick, rounded corners=3pt, minimum width=3.2cm, minimum height=0.65cm, align=center, font=\scriptsize\bfseries},
+    subproc/.style={rectangle, draw=teal!80!black, fill=teal!10, rounded corners=2pt, minimum width=3.0cm, minimum height=0.55cm, align=center, font=\tiny},
+    data/.style={rectangle, draw=gray!70, fill=gray!10, rounded corners=2pt, minimum width=3.2cm, minimum height=0.55cm, align=center, font=\scriptsize},
+    arrow/.style={-{Stealth[length=2.0mm]}, thick, draw=blue!70!black}
+]
+    \node[data] (task) {\textbf{Task Definition} $\langle p, \mathcal{C}, \mathcal{P}, y^* \rangle$};
+    
+    \node[proc, below=0.5cm of task] (strip) {Anti-Leakage Sanitizer\\{\tiny (Strips $\mathcal{P}$ and $y^*$)}};
+    
+    \node[proc, below=0.5cm of strip, fill=blue!15] (exec) {Topology Execution\\{\tiny ($\textsc{Single} \dots \textsc{Graph}$)}};
+    
+    \node[data, below=0.5cm of exec] (res) {\textbf{ArchitectureResult}\\$\langle \hat{y}, \Delta t, T_{\text{tokens}}, \mathcal{E}_{\text{msgs}} \rangle$};
+    
+    \node[proc, below=0.5cm of res, fill=teal!15] (eval) {Hybrid Evaluation Engine};
+    
+    \node[subproc, below=0.35cm of eval] (c1) {Deterministic Regex Matching ($CSR$)};
+    \node[subproc, below=0.25cm of c1] (c2) {Structural Keyword Check ($PMR$)};
+    \node[subproc, below=0.25cm of c2] (c3) {Token, Latency \& Cost Profiling};
+    
+    \node[data, below=0.4cm of c3, fill=green!10, draw=green!70!black] (out) {\textbf{Persisted Telemetry}\\Composite Score $S$, Logs, Traces};
+
+    \draw[arrow] (task) -- (strip);
+    \draw[arrow] (strip) -- node[right, font=\tiny] {Sanitized $\langle p, \mathcal{C} \rangle$} (exec);
+    \draw[arrow] (exec) -- (res);
+    \draw[arrow] (res) -- (eval);
+    \draw[arrow] (eval) -- (c1);
+    \draw[arrow] (c1) -- (c2);
+    \draw[arrow] (c2) -- (c3);
+    \draw[arrow] (c3) -- (out);
+
+    % Ground truth quarantined link
+    \draw[arrow, dashed, draw=orange!80!black] (task.east) -- ++(0.6,0) |- node[near start, right, font=\tiny] {Quarantined $\langle \mathcal{P}, y^* \rangle$} (eval.east);
+\end{tikzpicture}
+

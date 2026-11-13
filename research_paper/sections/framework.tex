@@ -1,0 +1,45 @@
+\section{Proposed Framework Architecture}
+\label{sec:framework}
+
+The overall architectural design of \textbf{MultiAgentTopologyEval} is depicted in Figure~\ref{fig:system_architecture}. The framework is organized into six modular subsystems: (1) Benchmark Task Loader and Anti-Leakage Sanitizer, (2) Topology Orchestration Hub, (3) Role-Specialized Agent Core, (4) Universal LLM Provider Layer, (5) API Safety and Guardrails Engine, and (6) Hybrid Evaluation and Statistical Analytics Pipeline.
+
+\begin{figure*}[t]
+\centering
+\input{figures/system_architecture.tex}
+\caption{System Architecture of MultiAgentTopologyEval: Decomposing execution across benchmark loading, anti-leakage isolation, topology orchestration, universal model provider abstraction, cost guardrails, and hybrid deterministic evaluation.}
+\label{fig:system_architecture}
+\end{figure*}
+
+\subsection{Benchmark Loader and Anti-Leakage Protection}
+The Benchmark Loader (\texttt{app/benchmark/loader.py}) ingests structured task suites from \texttt{data/tasks/benchmark\_tasks.json}. To maintain rigorous academic validity and eliminate data contamination, the framework enforces strict \textit{anti-leakage isolation} between agent execution and evaluation. When a task is dispatched to an architecture via \texttt{TaskDefinition.to\_agent\_prompt\_dict()}, ground-truth fields (\texttt{reference\_answer} and \texttt{expected\_properties}) are stripped from the payload. Agents receive only the operational prompt $p$, the task category, and explicit constraints $\mathcal{C}$. Authoritative reference answers remain strictly quarantined within the downstream evaluation engine.
+
+\subsection{Role-Specialized Agent Core}
+Agents inherit from a unified base class (\texttt{BaseAgent}) that encapsulates state representation, message queues, execution telemetry, and provider invocation. The framework instantiates five specialized roles:
+\begin{enumerate}
+    \item \textbf{Planner Agent:} Parses complex objectives, decomposes workflows into structured sub-tasks, and formulates step-by-step milestones.
+    \item \textbf{Researcher Agent:} Performs domain knowledge exploration, information retrieval, and architectural context synthesis.
+    \item \textbf{Analyst Agent:} Conducts quantitative constraint verification, algorithmic trade-off evaluation, and rule compliance checking.
+    \item \textbf{Critic Agent:} Reviews intermediate proposals, identifies edge-case vulnerabilities, and provides constructive refinement critiques.
+    \item \textbf{Finalizer Agent:} Consolidates multi-agent deliberations, reconciles conflicting peer outputs, and formats the authoritative final response.
+\end{enumerate}
+
+Every inter-agent communication event is structured as an immutable \texttt{AgentMessage} object logging the \texttt{sender\_id}, \texttt{receiver\_id}, \texttt{timestamp}, \texttt{message\_type}, and raw textual content.
+
+\subsection{Universal Provider Abstraction Layer}
+To isolate topology behavior from specific vendor APIs, MultiAgentTopologyEval implements an abstract provider interface (\texttt{LLMProvider}) that standardizes inference execution across heterogeneous cloud and local models:
+\begin{itemize}
+    \item \textbf{Standardized Output Schema:} Every API call returns an \texttt{LLMResponse} dataclass encapsulating the generated content, model identifier, wall-clock latency ($\pm 0.1\,$ms), decoupled input and output tokens, and calculated USD expenditure.
+    \item \textbf{Multi-Backend Support:} Native integrations are provided for Groq (\texttt{llama-3.3-70b-versatile}), Google Gemini (\texttt{gemini-3.1-flash-lite}), OpenAI (\texttt{gpt-4o-mini}), Cohere (\texttt{command-a-plus}), Cerebras, and DeepSeek.
+    \item \textbf{Deterministic Offline Mock Mode:} A built-in \texttt{MockProvider} generates deterministic, rule-based response tokens with zero external API calls. This enables 100\% offline unit testing, CI/CD regression verification, and student demonstrations at zero financial cost.
+    \item \textbf{Safe Connectivity Testing:} Provider instances implement a non-destructive ping protocol (\texttt{test\_connection()}) that verifies network endpoints and authentication status while rigorously redacting credentials from log files.
+\end{itemize}
+
+\subsection{Resource Guardrails and Failure Trapping}
+Unconstrained multi-agent loops can rapidly exhaust API budgets or enter infinite circular conversations. MultiAgentTopologyEval incorporates a proactive guardrail monitor (\texttt{GuardrailTracker}):
+\begin{itemize}
+    \item \textit{Call Caps:} Enforces strict thresholds on total API calls per task ($N_{\text{task}} \le 15$) and per experiment batch ($N_{\text{exp}} \le 60$).
+    \item \textit{Loop Detection:} Detects circular message exchange by trapping agent turns exceeding maximum allowed iterations ($K_{\text{iter}} \le 5$).
+    \item \textit{Pre-Flight Dry Run:} Pre-calculates expected token consumption and financial expenditure prior to live API dispatch.
+    \item \textit{Fault Handling:} Intercepts and categorizes provider-level exceptions into structured failure modes (HTTP 429 rate limits, request timeouts, malformed JSON schemas, and constraint breaches).
+\end{itemize}
+

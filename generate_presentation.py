@@ -148,7 +148,7 @@ def create_presentation():
     p2.space_before = Pt(10)
 
     p3 = tf1.add_paragraph()
-    p3.text = "\nPresenter: Kshitij Patil (MCA Candidate)\nDepartment of Computer Applications\nVeermata Jijabai Technological Institute (VJTI), Mumbai\nAcademic Year: 2025–2026\nFaculty Guide / Seminar Coordinator: MCA Department Faculty"
+    p3.text = "\nPresenter: Kshitij Kejriwal (MCA Candidate)\nDepartment of Computer Applications\nVeermata Jijabai Technological Institute (VJTI), Mumbai\nAcademic Year: 2025–2026\nFaculty Guide / Seminar Coordinator: MCA Department Faculty"
     p3.font.size = Pt(13)
     p3.font.color.rgb = TEXT_MUTED
     p3.space_before = Pt(15)

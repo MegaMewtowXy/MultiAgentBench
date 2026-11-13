@@ -1,0 +1,12 @@
+\section{Limitations}
+\label{sec:limitations}
+
+We transparently acknowledge several operational and methodological limitations of this study:
+
+\begin{enumerate}
+    \item \textbf{Benchmark Task Volume:} Our evaluation dataset focuses on seven curated, multi-faceted engineering tasks rather than thousands of narrow synthetic questions. While this design allows deep-dive inspection of inter-agent messages and constraint tracking, larger automated test suites will be required for exhaustive statistical power across niche sub-domains.
+    \item \textbf{Static vs. Dynamic Topology Configurations:} MultiAgentTopologyEval currently benchmarks pre-defined, static interaction graphs. It does not implement real-time adaptive topology restructuring, where agents dynamically add or prune communication edges based on runtime uncertainty or intermediate failure signals.
+    \item \textbf{Homogeneous Model Allocation:} In our experiments, all agents within a given topology instantiation utilized identical base models (e.g., all Gemini 3.1 Flash-Lite or all Cohere Command). In industrial production, heterogeneous architectures (e.g., an expensive frontier model acting as Coordinator/Critic with lightweight Small Language Models as leaf workers) represent an important hybrid configuration not yet fully benchmarked in this release.
+    \item \textbf{Provider API Rate Limits:} Multi-agent matrix sweeps generate rapid bursts of concurrent API calls that occasionally saturated free-tier rate limits, necessitating staggered sleep delays between agent steps that artificially inflated observed wall-clock durations during peak cloud provider load.
+\end{enumerate}
+

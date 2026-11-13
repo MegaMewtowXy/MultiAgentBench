@@ -1,0 +1,27 @@
+\begin{tikzpicture}[
+    node distance=1.0cm and 1.2cm,
+    auto,
+    coord/.style={rectangle, draw=blue!90!black, fill=blue!15, thick, rounded corners=4pt, minimum width=2.5cm, minimum height=0.75cm, align=center, font=\scriptsize\bfseries},
+    worker/.style={rectangle, draw=teal!80!black, fill=teal!10, thick, rounded corners=3pt, minimum width=2.0cm, minimum height=0.65cm, align=center, font=\tiny\bfseries},
+    sink/.style={rectangle, draw=purple!80!black, fill=purple!10, thick, rounded corners=3pt, minimum width=2.2cm, minimum height=0.7cm, align=center, font=\scriptsize\bfseries},
+    arrow/.style={-{Stealth[length=2.0mm]}, thick, draw=blue!70!black}
+]
+    \node[coord] (coord) {Central Coordinator\\(Planner)};
+    
+    \node[worker, below left=0.7cm and -0.4cm of coord] (res) {Researcher};
+    \node[worker, below=0.7cm of coord] (ana) {Analyst};
+    \node[worker, below right=0.7cm and -0.4cm of coord] (crit) {Critic};
+    
+    \node[sink, below=0.8cm of ana] (fin) {Finalizer (Sink)};
+
+    % Delegation arrows
+    \draw[arrow] (coord.south) -- (res.north);
+    \draw[arrow] (coord.south) -- (ana.north);
+    \draw[arrow] (coord.south) -- (crit.north);
+
+    % Aggregation arrows
+    \draw[arrow] (res.south) -- (fin.north west);
+    \draw[arrow] (ana.south) -- (fin.north);
+    \draw[arrow] (crit.south) -- (fin.north east);
+\end{tikzpicture}
+

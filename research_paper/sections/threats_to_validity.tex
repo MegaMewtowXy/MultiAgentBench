@@ -1,0 +1,21 @@
+\section{Threats to Validity}
+\label{sec:threats_to_validity}
+
+We analyze potential threats to validity across four standard dimensions:
+
+\subsection{Internal Validity}
+Internal validity concerns whether observed differences in performance, latency, and cost are genuinely attributable to interaction topology rather than extraneous confounding factors. To mitigate confounding effects:
+(1) all topologies evaluated identical task prompts and constraint lists;
+(2) base models, generation temperatures ($T=0.70$), and token limits were held strictly constant within comparative batches; and
+(3) agents shared identical underlying role prompt templates across topologies. 
+However, inherent stochasticity in LLM sampling introduces natural run-to-run variance, which we address through repeated multi-provider execution batches.
+
+\subsection{External Validity}
+External validity addresses the generalizability of our findings beyond the evaluated setup. Our benchmark comprises seven multi-step technical tasks focusing on cloud architecture, distributed systems, and algorithmic reasoning. While these tasks rigorously exercise constraint handling and multi-agent delegation, findings may not directly generalize to continuous embodied robotic control, long-horizon open-ended creative dialogue, or multi-player competitive social simulations (e.g., Werewolf~\cite{Zhu2025MultiAgentBench}).
+
+\subsection{Construct Validity}
+Construct validity examines whether our metrics accurately capture the operational constructs under study. Primary task success relies on deterministic regex verification and numeric range auditing rather than subjective LLM-as-a-judge heuristics. While regex verification provides deterministic reproducibility, it may occasionally penalize semantically correct responses that express numerical quantities in unpredicted textual syntaxes. Our anti-leakage protocol rigorously preserves construct integrity by quarantining reference answers from agent visibility.
+
+\subsection{Measurement Validity}
+Measurement validity concerns the precision of captured telemetry. Token usage and financial costs are calculated directly from official provider metadata responses. However, wall-clock latency incorporates internet transit and provider queue scheduling fluctuations, which can introduce variance during peak cloud traffic hours.
+

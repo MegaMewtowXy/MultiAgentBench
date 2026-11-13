@@ -10,7 +10,7 @@
 ## Slide 1: Title Slide
 - **Title:** EVALUATING MULTI-AGENT COORDINATION STRATEGIES FOR LLM-BASED TASK SOLVING
 - **Subtitle:** Technical Seminar Presentation
-- **Presenter:** Kshitij Patil (MCA Candidate)
+- **Presenter:** Kshitij Kejriwal (MCA Candidate)
 - **Department:** Department of Computer Applications
 - **Institution:** Veermata Jijabai Technological Institute (VJTI), Mumbai
 - **Academic Year:** 2025–2026
