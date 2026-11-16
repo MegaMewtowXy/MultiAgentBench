@@ -17,16 +17,19 @@ def add_references_and_appendices(doc, helpers):
     C_NAVY = helpers['C_NAVY']
     C_DARK = helpers['C_DARK']
 
+    font_name = helpers.get('FONT_NAME', 'Times New Roman')
+
     # ----------------------------------------------------
     # REFERENCES
     # ----------------------------------------------------
     doc.add_page_break()
     p_ref_head = doc.add_paragraph()
-    p_ref_head.paragraph_format.space_before = Pt(20)
+    p_ref_head.paragraph_format.space_before = Pt(24)
     p_ref_head.paragraph_format.space_after = Pt(16)
+    p_ref_head.paragraph_format.keep_with_next = True
     r_rh = p_ref_head.add_run("REFERENCES")
-    r_rh.font.name = "Calibri"
-    r_rh.font.size = Pt(20)
+    r_rh.font.name = font_name
+    r_rh.font.size = Pt(18)
     r_rh.font.bold = True
     r_rh.font.color.rgb = C_NAVY
 
@@ -79,11 +82,13 @@ def add_references_and_appendices(doc, helpers):
 
     for ref in references:
         p = doc.add_paragraph()
-        p.paragraph_format.space_after = Pt(4)
-        p.paragraph_format.line_spacing = 1.10
+        p.paragraph_format.left_indent = Inches(0.4)
+        p.paragraph_format.first_line_indent = Inches(-0.4)
+        p.paragraph_format.line_spacing = 1.25
+        p.paragraph_format.space_after = Pt(5)
         run = p.add_run(ref)
-        run.font.name = "Calibri"
-        run.font.size = Pt(9.5)
+        run.font.name = font_name
+        run.font.size = Pt(10.0)
         run.font.color.rgb = helpers['C_DARK']
 
     # ----------------------------------------------------
@@ -91,10 +96,11 @@ def add_references_and_appendices(doc, helpers):
     # ----------------------------------------------------
     doc.add_page_break()
     p_ap_a = doc.add_paragraph()
-    p_ap_a.paragraph_format.space_before = Pt(20)
+    p_ap_a.paragraph_format.space_before = Pt(24)
     p_ap_a.paragraph_format.space_after = Pt(14)
+    p_ap_a.paragraph_format.keep_with_next = True
     r_aa = p_ap_a.add_run("APPENDIX A: MATHEMATICAL DERIVATIONS & STATISTICAL FORMULATIONS")
-    r_aa.font.name = "Calibri"
+    r_aa.font.name = font_name
     r_aa.font.size = Pt(16)
     r_aa.font.bold = True
     r_aa.font.color.rgb = C_NAVY
@@ -114,10 +120,11 @@ def add_references_and_appendices(doc, helpers):
     # ----------------------------------------------------
     doc.add_page_break()
     p_ap_b = doc.add_paragraph()
-    p_ap_b.paragraph_format.space_before = Pt(20)
+    p_ap_b.paragraph_format.space_before = Pt(24)
     p_ap_b.paragraph_format.space_after = Pt(14)
+    p_ap_b.paragraph_format.keep_with_next = True
     r_ab = p_ap_b.add_run("APPENDIX B: COMPLETE BENCHMARK TASK SPECIFICATION SUITE")
-    r_ab.font.name = "Calibri"
+    r_ab.font.name = font_name
     r_ab.font.size = Pt(16)
     r_ab.font.bold = True
     r_ab.font.color.rgb = C_NAVY
@@ -156,10 +163,11 @@ def add_references_and_appendices(doc, helpers):
     # ----------------------------------------------------
     doc.add_page_break()
     p_ap_c = doc.add_paragraph()
-    p_ap_c.paragraph_format.space_before = Pt(20)
+    p_ap_c.paragraph_format.space_before = Pt(24)
     p_ap_c.paragraph_format.space_after = Pt(14)
+    p_ap_c.paragraph_format.keep_with_next = True
     r_ac = p_ap_c.add_run("APPENDIX C: SYSTEM PROMPT TEMPLATES FOR SPECIALIZED AGENT PERSONAS")
-    r_ac.font.name = "Calibri"
+    r_ac.font.name = font_name
     r_ac.font.size = Pt(16)
     r_ac.font.bold = True
     r_ac.font.color.rgb = C_NAVY
